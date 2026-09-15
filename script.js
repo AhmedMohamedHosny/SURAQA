@@ -2168,3 +2168,63 @@ window.openReviewLightbox = function(src) {
     modal.classList.add("open");
   }
 };
+/* =========================================================
+   تطبيق وفحص كود الخصم في السلة (سراقة)
+   ========================================================= */
+window.handleApplyCoupon = async function() {
+  const input = document.getElementById("couponCodeInput");
+  const msg = document.getElementById("couponStatusMsg");
+  const btn = document.getElementById("applyCouponBtn");
+  const code = input ? input.value.trim().toUpperCase() : "";
+
+  if (!msg) return;
+
+  if (!code) {
+    msg.style.display = "block";
+    msg.style.color = "#e74c3c";
+    msg.textContent = "يرجى كتابة كود الخصم أولاً!";
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "...";
+  }
+
+  try {
+    const snap = await getDoc(doc(db, "coupons", code));
+    if (snap.exists() && snap.data().active) {
+      activeCoupon = snap.data();
+      msg.style.display = "block";
+      msg.style.color = "#2ecc71";
+      msg.textContent = `✓ تم تفعيل الخصم (${activeCoupon.type === 'percent' ? activeCoupon.value + '%' : activeCoupon.value + ' ج'}) على كل عبوة!`;
+      updateCartUI(); // إعادة حساب وتحديث كل منتج في السلة فوراً
+    } else {
+      activeCoupon = null;
+      msg.style.display = "block";
+      msg.style.color = "#e74c3c";
+      msg.textContent = "عذراً، هذا الكود غير صالح أو معطل!";
+      updateCartUI();
+    }
+  } catch (err) {
+    console.error("Coupon Error:", err);
+    msg.style.display = "block";
+    msg.style.color = "#e74c3c";
+    msg.textContent = "حدث خطأ أثناء فحص الكوبون، حاول مجدداً.";
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "تطبيق";
+    }
+  }
+};
+
+// ربط الزر والضغط على Enter في خانة الإدخال
+document.getElementById("applyCouponBtn")?.addEventListener("click", window.handleApplyCoupon);
+
+document.getElementById("couponCodeInput")?.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    window.handleApplyCoupon();
+  }
+});
