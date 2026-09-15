@@ -119,71 +119,79 @@ html[dir="rtl"] .announcement-close {
 }
 
 .navbar {
-  height: 90px; /* زيادة ارتفاع النافبار ليتسع للشعار الكبير براحة */
+  height: 96px; /* ارتفاع كافٍ لاستيعاب الشعار بحجم مريح */
   width: 100%;
-  background: rgba(10, 34, 28, .95);
+  background: rgba(10, 34, 28, .96);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   position: sticky;
   top: 40px;
   z-index: 1000;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--line);
   transition: .3s ease;
 }
 
 .navbar.scrolled {
-  border-color: var(--line);
-  box-shadow: 0 5px 30px rgba(0,0,0,.04);
+  box-shadow: 0 5px 30px rgba(0,0,0,.15);
 }
 
 .nav-inner {
   height: 100%;
   max-width: 1400px;
-  padding: 0 5%;
+  padding: 0 4%;
   margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  direction: rtl; /* تثبيت اتجاه النافبار ليكون اليمين هو البداية */
 }
 
-.logo,
-.footer-logo {
-  font-family: var(--serif);
-  font-size: 34px;
-  font-weight: 600;
-  letter-spacing: 7px;
-}
 /* =========================================================
-   تكبير لوجو سراقة الرئيسي (للكمبيوتر واللابتوب)
+   تكبير لوجو سراقة الرئيسي وتثبيته جهة اليمين
    ========================================================= */
 .brand-logo-wrap {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 14px !important;
+  gap: 16px !important;
   text-decoration: none !important;
-  height: 100% !important;
+  order: 1 !important; /* تثبيت اللوجو يميناً */
+  margin-left: auto;
 }
 
 .nav-brand-img {
-  height: 68px !important;       /* تكبير أيقونة اللوجو بوضوح تام */
-  max-height: 72px !important;
+  height: 78px !important;       /* تكبير أيقونة الشعار */
+  max-height: 82px !important;
   width: auto !important;
   object-fit: contain !important;
-  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5)) !important;
+  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.6)) !important;
   transition: transform 0.3s ease !important;
 }
 
 .brand-logo-wrap:hover .nav-brand-img {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .nav-brand-txt {
   font-family: var(--serif-ar, 'Cairo', serif) !important;
-  font-size: 32px !important;     /* تكبير كلمة سراقة لتناسب حجم اللوجو */
+  font-size: 36px !important;     /* تكبير كلمة سراقة */
   font-weight: 900 !important;
   color: var(--gold) !important;
   letter-spacing: -0.5px !important;
   line-height: 1 !important;
+}
+
+.desktop-nav {
+  order: 2 !important;
+  display: flex;
+  gap: 32px;
+}
+
+.nav-actions {
+  order: 3 !important;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-right: auto;
 }
 
 .desktop-nav {
@@ -4855,29 +4863,47 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     height: 260px;
   }
 }
-/* ضبط وتكبير اللوجو على الموبايل */
+/* =========================================================
+   تثبيت اللوجو يميناً وتكبيره على الموبايل
+   ========================================================= */
+@media (max-width: 800px) {
   .navbar {
-    height: 78px !important; /* ارتفاع مريح على الموبايل */
+    height: 82px !important;
   }
 
-  .logo.brand-logo-wrap {
-    order: 1;
-    display: flex !important;
+  .nav-inner {
+    direction: rtl !important;
+    justify-content: space-between !important;
+    padding: 0 4% !important;
+  }
+
+  .brand-logo-wrap {
+    order: 1 !important;
+    display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
+    margin-left: 0 !important;
   }
 
-  .logo .nav-brand-img {
-    height: 52px !important;  /* حجم كبير وظاهر وممتاز على شاشة الهاتف */
-    max-height: 54px !important;
+  .nav-brand-img {
+    height: 60px !important; /* زيادة حجم الشعار في شاشات الهاتف */
+    max-height: 64px !important;
     width: auto !important;
+  }
+
+  .nav-brand-txt {
+    display: inline-block !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+  }
+
+  .nav-actions {
+    order: 2 !important;
+    margin-right: 0 !important;
+    gap: 10px !important;
+  }
+
+  .mobile-menu-btn {
     display: block !important;
   }
-
-  .logo .nav-brand-txt {
-    display: inline-block !important; /* إظهار الاسم بجانب الشعار */
-    font-size: 22px !important;
-    font-weight: 900 !important;
-    color: var(--gold) !important;
-    line-height: 1 !important;
-  }
+}
