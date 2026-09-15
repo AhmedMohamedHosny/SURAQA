@@ -2734,25 +2734,60 @@ body.dark-mode .lang-btn {
   white-space: nowrap;
 }
 
-/* للموبايل */
+/* =========================================================
+   تنسيق الموبايل: الـ 4 كروت في صف واحد ثابت وبخط متناسق
+   ========================================================= */
 @media (max-width: 800px) {
   .trust-strip {
-    grid-template-columns: repeat(2, 1fr); /* 2x2 على الهاتف لراحة العين */
-    gap: 10px;
-    padding: 0 4%;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important; /* 4 كروت في صف واحد */
+    gap: 5px !important;                              /* تقليل المسافة بين الكروت لتوفير مساحة */
+    padding: 0 2% !important;                         /* استغلال عرض الشاشة بالكامل */
+    margin: 10px auto 20px !important;
+    overflow: visible !important;
   }
 
   .trust-item {
-    border-radius: 30px;
-    padding: 10px 12px;
-  }
-
-  .trust-item p {
-    font-size: 10.5px !important;
+    border-radius: 20px !important;                   /* كيرف ناعم متناسق مع الحجم الصغير */
+    padding: 8px 3px !important;                      /* تقليل الهوامش الداخلية */
+    gap: 3px !important;
+    min-width: 0 !important;
   }
 
   .trust-icon {
-    font-size: 14px;
+    font-size: 12px !important;                       /* تصغير الأيقونة */
+    line-height: 1 !important;
+  }
+
+  .trust-item p {
+    font-size: 8.5px !important;                      /* حجم خط مدروس ومضبوط لشاشات الموبايل */
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;                   /* السماح بتوزيع الكلام لو السطر ضيق */
+    word-break: keep-all !important;                  /* منع قص الكلمات في المنتصف */
+    text-align: center !important;
+  }
+}
+
+/* شاشات الموبايل الصغيرة جداً (أقل من 380px) */
+@media (max-width: 380px) {
+  .trust-strip {
+    gap: 3px !important;
+    padding: 0 1% !important;
+  }
+
+  .trust-item {
+    padding: 6px 2px !important;
+    border-radius: 16px !important;
+  }
+
+  .trust-icon {
+    font-size: 11px !important;
+  }
+
+  .trust-item p {
+    font-size: 7.8px !important;
+    line-height: 1.2 !important;
   }
 }
 
