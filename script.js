@@ -316,6 +316,12 @@ const SIZE_MULTIPLIERS = {
 function getPriceForSize(basePrice, size = 50) {
   return Math.round((basePrice * (SIZE_MULTIPLIERS[size] || 1)) / 10) * 10;
 }
+function getProductDisplayPrice(product) {
+  if (product.sizes && product.sizes[30]) {
+    return Number(product.sizes[30]);
+  }
+  return getPriceForSize(Number(product.price || 0), 30);
+}
 let modalQty = 1;
 let toastTimeout;
 let currentLang = loadLang();
@@ -543,9 +549,12 @@ function productCard(product) {
           ${escapeHtml(productDescription(product))}
         </p>
 
-        <!-- السطر السفلي: السعر وعدد التقييمات -->
+<!-- السطر السفلي: يبدأ من سعر زجاجة الـ 30 مل -->
         <div class="product-bottom">
-          <span class="product-price">${formatPrice(product.price)}</span>
+          <span class="product-price">
+            <small style="font-size: 10px; font-weight: 500; opacity: 0.8; margin-left: 3px;">يبدأ من</small>
+            ${formatPrice(getProductDisplayPrice(product))}
+          </span>
           <span class="product-reviews-count">${product.reviews} ${escapeHtml(t("reviews"))}</span>
         </div>
       </div>
@@ -577,12 +586,12 @@ function getFilteredProducts() {
     );
   }
 
-  switch (currentSort) {
+switch (currentSort) {
     case "price-low":
-      filtered.sort((a, b) => a.price - b.price);
+      filtered.sort((a, b) => getProductDisplayPrice(a) - getProductDisplayPrice(b));
       break;
     case "price-high":
-      filtered.sort((a, b) => b.price - a.price);
+      filtered.sort((a, b) => getProductDisplayPrice(b) - getProductDisplayPrice(a));
       break;
     case "rating":
       filtered.sort((a, b) => b.rating - a.rating);
