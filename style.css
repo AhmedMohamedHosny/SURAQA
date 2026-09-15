@@ -5838,13 +5838,13 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     text-shadow: 0 0 8px rgba(226, 192, 125, 0.5) !important;
   }
 
-  /* 2. كارت الأزرار: في الأسفل وموسّط في السنتر بالمللي */
+/* 2. كارت الأزرار: مرفوع لأعلى سنة وموسّط في السنتر بالمللي */
   .hero-actions-dock {
     position: absolute !important;
-    bottom: 18px !important;         /* في قاع الكارت */
+    bottom: 38px !important;         /* تم رفعه لأعلى بمقدار 20px إضافية */
     left: 50% !important;
     right: auto !important;
-    transform: translateX(-50%) !important; /* توسيط دقيق في المنتصف */
+    transform: translateX(-50%) !important;
     display: inline-flex !important;
     margin: 0 !important;
     padding: 6px 12px !important;
