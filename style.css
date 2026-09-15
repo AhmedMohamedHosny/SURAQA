@@ -153,6 +153,33 @@ background: rgba(10, 34, 28, .95);
   font-weight: 600;
   letter-spacing: 7px;
 }
+/* تنسيقات وتكبير لوجو سراقة الرئيسي */
+.brand-logo-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none;
+}
+
+.nav-brand-img {
+  height: 52px !important; /* تكبير الصورة بشكل واضح */
+  width: auto !important;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  transition: transform 0.25s ease;
+}
+
+.brand-logo-wrap:hover .nav-brand-img {
+  transform: scale(1.05);
+}
+
+.nav-brand-txt {
+  font-family: var(--serif-ar, 'Cairo', serif) !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  color: var(--gold) !important;
+  letter-spacing: 0 !important;
+}
 
 .desktop-nav {
   display: flex;
@@ -1991,21 +2018,28 @@ body.dark-mode .lang-btn {
     display: none;
   }
 
-  /* اللوجو يمين بالصورة فقط */
-  .logo {
-    position: static;
-    transform: none;
+/* ضبط وتكبير اللوجو على الهاتف */
+  .navbar {
+    height: 72px !important; /* زيادة ارتفاع النافبار ليتسع للوجو براحة */
+  }
+
+  .logo.brand-logo-wrap {
     order: 1;
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
   }
 
-  .logo span {
-    display: none !important; /* إخفاء كلمة SURAKA في الموبايل */
+  .logo .nav-brand-img {
+    height: 48px !important; /* حجم كبير وواضح جداً على الموبايل */
+    width: auto !important;
   }
 
-  .logo img {
-    height: 30px !important;
+  .logo .nav-brand-txt {
+    display: inline-block !important; /* إظهار اسم سراقة بجانب الشعار */
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    color: var(--gold) !important;
   }
 
   /* الأيقونات في المنتصف متجهة لليسار */
