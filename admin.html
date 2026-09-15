@@ -490,6 +490,9 @@ input, select, textarea {
         <div class="dropdown-item" onclick="openSection('shippingSec')">
           <span>🚚 إدارة أسعار شحن المحافظات</span>
         </div>
+        <div class="dropdown-item" onclick="openSection('settingsSec')" style="color: #4ade80;">
+          <span>⚙️ إعدادات المتجر، الأمان والشريط الإعلاني والكوبونات</span>
+        </div>
         <div class="dropdown-item" id="syncDefaultsBtn" style="color: #64b5f6;">
           <span>📥 مزامنة عطور الموقع لـ Firebase</span>
         </div>
@@ -868,6 +871,125 @@ input, select, textarea {
         </form>
       </div>
     </section>
+<!-- 7. قسم إعدادات المتجر، الأمان، الشريط الإعلاني، وإدارة الكوبونات -->
+    <section id="settingsSec" class="section-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="font-size: 20px; color: var(--gold); font-weight: 900;">⚙️ تخصيص العروض والإعدادات والأمان</h2>
+        <button class="stock-btn" style="width:auto; padding:6px 14px; font-size:11.5px;" onclick="openSection('inventorySec')">➔ العودة لإدارة العطور</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;">
+        
+        <!-- كارت إعدادات الأمان ورقم الواتساب -->
+        <div class="panel" style="margin-bottom: 0;">
+          <div class="panel-title">
+            <span>🛡️ إعدادات المتجر والأمان</span>
+          </div>
+
+          <form id="storeSecurityForm">
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label>رقم واتساب استقبال الطلبات 📱</label>
+              <input type="tel" id="cfgAdminWhatsapp" placeholder="مثال: 201016118242" required>
+              <small style="font-size: 10px; color: var(--text-muted);">الرقم الذي تُرسل إليه فواتير وبيانات الطلبات تلقائياً مع كود الدولة (20).</small>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label>كلمة مرور لوحة التحكم (Admin Password) 🔒</label>
+              <input type="text" id="cfgAdminPassword" placeholder="أدخل كلمة مرور قوية" required>
+              <small style="font-size: 10px; color: var(--text-muted);">محمية سحابياً في Firebase ولن تظهر في كود المتجر للزوار.</small>
+            </div>
+
+            <button type="submit" class="btn-submit" id="saveSecurityBtn" style="width: 100%; margin-top: 10px; background: #27ae60; color: #fff;">💾 حفظ وتحديث الأمان والواتساب</button>
+          </form>
+        </div>
+
+        <!-- كارت الشريط الإعلاني العلوي (Ticker) -->
+        <div class="panel" style="margin-bottom: 0;">
+          <div class="panel-title">
+            <span>📢 الشريط الإعلاني العلوي (Ticker)</span>
+          </div>
+
+          <form id="storeTickerForm">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>نص العرض 1</label>
+              <input type="text" id="cfgTicker1" placeholder="مثال: ✨ صلِّ على النَّبيِّ المختار ﷺ ✨" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>نص العرض 2</label>
+              <input type="text" id="cfgTicker2" placeholder="مثال: 💎 سراقة — جوهر الأناقة والرفاهية التي تُحس 💎" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>نص العرض 3</label>
+              <input type="text" id="cfgTicker3" placeholder="مثال: 🚚 توصيل مجاني للطلبات أكثر من 1,500 جنيه 🚚" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="saveTickerBtn" style="width: 100%; margin-top: 10px; background: #2980b9; color: #fff;">📢 حفظ ونشر العروض في المتجر</button>
+          </form>
+        </div>
+
+        <!-- كارت إدارة كوبونات الخصم والبروموكود -->
+        <div class="panel" style="margin-bottom: 0; grid-column: 1 / -1;">
+          <div class="panel-title">
+            <span>🎟️ إدارة كوبونات الخصم والبروموكود</span>
+          </div>
+
+          <form id="createCouponForm">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+              <div class="form-group">
+                <label>كود الكوبون (باللغة الإنجليزية)*</label>
+                <input type="text" id="cpnCode" placeholder="مثال: SURAQA10" style="text-transform: uppercase;" required>
+              </div>
+
+              <div class="form-group">
+                <label>نوع الخصم*</label>
+                <select id="cpnType">
+                  <option value="percent">نسبة مئوية (%)</option>
+                  <option value="fixed">مبلغ ثابت (جنيه)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>قيمة الخصم*</label>
+                <input type="number" id="cpnValue" placeholder="مثال: 10 أو 100" min="1" required>
+              </div>
+
+              <div class="form-group">
+                <label>تفعيل الكوبون</label>
+                <select id="cpnStatus">
+                  <option value="active">مفعل ويعمل</option>
+                  <option value="disabled">معطل مؤقتاً</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="saveCouponBtn" style="width: 100%; margin-top: 12px; background: #d4af37; color: #071914; font-weight:900;">
+              ➕ إضافة الكوبون وتفعيله بالمتجر
+            </button>
+          </form>
+
+          <!-- جدول الكوبونات المسجلة -->
+          <div class="table-wrap" style="margin-top: 18px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>كود الخصم</th>
+                  <th>قيمة الخصم</th>
+                  <th>الحالة</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="couponsTableBody">
+                <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">جاري جلب الكوبونات...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  
   </main>
 
   <!-- نافذة مظهر وحالة المتجر (الفتح/الإغلاق + 22 ثيم متداخل) -->
@@ -920,6 +1042,7 @@ input, select, textarea {
     const ordersCol = collection(db, "orders");
     const perfumesCol = collection(db, "perfumes");
     const settingsDoc = doc(db, "settings", "storeConfig");
+    const couponsCol = collection(db, "coupons");
 
     // قائمة الـ 22 لون وثيم متداخل
     const STORE_THEMES = [
@@ -2172,7 +2295,131 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
     });
 
     checkAuthSession();
-    
+    /* =========================================================
+       إدارة إعدادات الأمان والشريط الإعلاني
+       ========================================================= */
+    onSnapshot(settingsDoc, (snap) => {
+      if (!snap.exists()) return;
+      const data = snap.data();
+
+      // تحديث كلمة السر للمشرف تلقائياً
+      if (data.adminPassword) correctAdminPass = String(data.adminPassword).trim();
+
+      const passInp = document.getElementById("cfgAdminPassword");
+      const waInp = document.getElementById("cfgAdminWhatsapp");
+      if (passInp && data.adminPassword) passInp.value = data.adminPassword;
+      if (waInp && data.whatsappNumber) waInp.value = data.whatsappNumber;
+
+      const t1 = document.getElementById("cfgTicker1");
+      const t2 = document.getElementById("cfgTicker2");
+      const t3 = document.getElementById("cfgTicker3");
+      if (t1 && data.ticker1) t1.value = data.ticker1;
+      if (t2 && data.ticker2) t2.value = data.ticker2;
+      if (t3 && data.ticker3) t3.value = data.ticker3;
+    });
+
+    // حفظ الأمان ورقم الواتساب
+    document.getElementById("storeSecurityForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("saveSecurityBtn");
+      btn.disabled = true;
+      btn.textContent = "جاري الحفظ...";
+
+      try {
+        await setDoc(settingsDoc, {
+          adminPassword: document.getElementById("cfgAdminPassword").value.trim(),
+          whatsappNumber: document.getElementById("cfgAdminWhatsapp").value.trim()
+        }, { merge: true });
+        toast("تم تحديث كلمة المرور ورقم الواتساب بنجاح! 🔒");
+      } catch (err) {
+        toast("حدث خطأ أثناء حفظ الأمان!");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 حفظ وتحديث الأمان والواتساب";
+      }
+    });
+
+    // حفظ نصوص الشريط الإعلاني
+    document.getElementById("storeTickerForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("saveTickerBtn");
+      btn.disabled = true;
+      btn.textContent = "جاري النشر...";
+
+      try {
+        await setDoc(settingsDoc, {
+          ticker1: document.getElementById("cfgTicker1").value.trim(),
+          ticker2: document.getElementById("cfgTicker2").value.trim(),
+          ticker3: document.getElementById("cfgTicker3").value.trim()
+        }, { merge: true });
+        toast("تم نشر وتحديث الشريط الإعلاني بالمتجر فوراً! 📢");
+      } catch (err) {
+        toast("حدث خطأ أثناء نشر العروض!");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📢 حفظ ونشر العروض في المتجر";
+      }
+    });
+
+    /* =========================================================
+       إدارة وحفظ كوبونات الخصم (Promo Codes)
+       ========================================================= */
+    document.getElementById("createCouponForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const code = document.getElementById("cpnCode").value.trim().toUpperCase();
+      const type = document.getElementById("cpnType").value;
+      const val = Number(document.getElementById("cpnValue").value);
+      const active = document.getElementById("cpnStatus").value === "active";
+
+      const btn = document.getElementById("saveCouponBtn");
+      btn.disabled = true;
+
+      try {
+        await setDoc(doc(db, "coupons", code), {
+          code: code,
+          type: type,
+          value: val,
+          active: active,
+          createdAt: new Date()
+        });
+        toast(`تم تفعيل كوبون الخصم [${code}] بنجاح! 🎟️`);
+        e.target.reset();
+      } catch (err) {
+        toast("حدث خطأ أثناء حفظ الكوبون!");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    onSnapshot(couponsCol, (snap) => {
+      const tbody = document.getElementById("couponsTableBody");
+      if (!tbody) return;
+
+      const list = [];
+      snap.forEach(d => list.push(d.data()));
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">لا توجد كوبونات خصم مضافة بعد.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(c => `
+        <tr>
+          <td><strong style="color:var(--gold); letter-spacing:1px;">${c.code}</strong></td>
+          <td>${c.type === 'percent' ? `${c.value}% خصم مئوي` : `${c.value} ج.م خصم ثابت`}</td>
+          <td><span style="color:${c.active ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${c.active ? 'مفعل' : 'معطل'}</span></td>
+          <td>
+            <button type="button" class="btn-card-delete" onclick="deleteCoupon('${c.code}')" title="حذف الكوبون">✕</button>
+          </td>
+        </tr>
+      `).join("");
+    });
+
+    window.deleteCoupon = async function(code) {
+      if (!confirm(`هل تريد حذف الكوبون [${code}] نهائياً من المتجر؟`)) return;
+      await deleteDoc(doc(db, "coupons", code));
+      toast(`تم إيقاف وحذف الكوبون [${code}]!`);
+    };
   </script>
 </body>
 </html>
