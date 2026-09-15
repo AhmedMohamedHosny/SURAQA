@@ -552,7 +552,7 @@ function productCard(product) {
 <!-- السطر السفلي: يبدأ من سعر زجاجة الـ 30 مل -->
         <div class="product-bottom">
           <span class="product-price">
-            <small style="font-size: 10px; font-weight: 500; opacity: 0.8; margin-left: 3px;">يبدأ من</small>
+            <small style="font-size: 10px; font-weight: 500; opacity: 0.8; margin-left: 3px;"></small>
             ${formatPrice(getProductDisplayPrice(product))}
           </span>
           <span class="product-reviews-count">${product.reviews} ${escapeHtml(t("reviews"))}</span>
