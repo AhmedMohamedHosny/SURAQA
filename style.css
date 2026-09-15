@@ -5808,28 +5808,34 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     pointer-events: none; /* لتمرير الضغطات إن وجدت */
   }
 
-/* 1. العنوان: مفرود على سطر واحد كامل في أعلى الصورة بخط مضبوط */
-  .hero-main-title {
+/* 1. العنوان: نفس نوع وسُمك (تُخن) خط قصة سراقة وسطر واحد كامل */
+  .hero-main-title,
+  html[lang="ar"] .hero-main-title {
     position: absolute !important;
-    top: 15px !important;            /* أعلى الصورة تماماً فوق الصخور والزجاجة */
+    top: 16px !important;            /* في المساحة العلوية الهادئة */
     left: 0 !important;
     right: 0 !important;
-    width: 100% !important;          /* أخذ عرض الكارت بالكامل */
+    width: 100% !important;
     max-width: 100% !important;
-    font-size: 5px !important;      /* حجم خط مدروس ومصغر ليتسع للسطر كاملاً */
-    font-weight: 700 !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;  /* سطر واحد بدون تقطيع */
-    text-align: center !important;   /* توسيط في أعلى الصورة بمظهر سينمائي متزن */
+    font-family: var(--sans-ar, 'Cairo', sans-serif) !important; /* نفس خط الأزرار */
+    font-size: 11px !important;       /* حجم متناسق للسطر الواحد */
+    font-weight: 500 !important;      /* خط عادي ناعم وغير سميك كأزرار المتجر */
+    letter-spacing: 0.3px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;   /* سطر واحد يمتد على عرض الصورة */
+    text-align: center !important;    /* توسيط متزن في أعلى الصورة */
     margin: 0 auto !important;
-    padding: 0 10px !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 12px rgba(0, 0, 0, 0.8) !important;
+    padding: 0 8px !important;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9) !important;
     pointer-events: auto;
   }
 
-  .hero-main-title em {
-    font-size: inherit !important;
-    font-weight: 800 !important;
+  .hero-main-title em,
+  html[lang="ar"] .hero-main-title em {
+    font-style: normal !important;
+    font-weight: 600 !important;      /* تمييز خفيف جداً لنفس الكلمات */
+    color: var(--gold, #e2c07d) !important;
+    text-shadow: 0 0 8px rgba(226, 192, 125, 0.5) !important;
   }
 
   /* 2. كارت الأزرار: في الأسفل وموسّط في السنتر بالمللي */
