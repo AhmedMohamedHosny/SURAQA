@@ -485,6 +485,11 @@ function productCard(product) {
 
   return `
     <article class="product-card" data-product-id="${product.id}">
+    <!-- طبقات التأثيرات الملكية الأربعة -->
+      <span class="glass-sheen"></span>
+      <span class="spotlight-glow"></span>
+      <span class="gold-dust"></span>
+
       <div class="product-image-wrap">
         ${badge ? `<span class="product-badge">${escapeHtml(badge)}</span>` : ""}
 
@@ -2227,4 +2232,18 @@ document.getElementById("couponCodeInput")?.addEventListener("keypress", (e) => 
     e.preventDefault();
     window.handleApplyCoupon();
   }
+});
+/* =========================================================
+   تتبع كشاف الماوس الفاخر على كروت العطور (Spotlight)
+   ========================================================= */
+document.addEventListener("mousemove", (e) => {
+  const card = e.target.closest(".product-card");
+  if (!card) return;
+
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  card.style.setProperty("--mouse-x", `${x}px`);
+  card.style.setProperty("--mouse-y", `${y}px`);
 });
