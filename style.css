@@ -1,17 +1,17 @@
 :root {
-  --black: #0a221c;        /* أخضر غامق جداً للهيدر والفوتر والزرار الرئيسية */
-  --black-2: #061914;      /* أخضر أغمق للخلفيات الثانوية */
-  --ivory: #0d2c24;        /* لون خلفية الموقع الرئيسية (أخضر زيتي ملكي) */
-  --cream: #12382e;        /* أخضر بدرجة متوسطة للأقسام الفرعية */
-  --beige: #c5a059;        /* ذهبي مائل للبيج للتفاصيل */
-  --gold: #d4af37;         /* ذهبي فاخر للنصوص والعناوين الملونة */
-  --text: #e8e6df;         /* لون النصوص الرئيسية (بيج فاتح مائل للأبيض) */
-  --muted: #a3b8b0;        /* لون الفرعيات (أخضر هادئ) */
-  --line: rgba(212, 175, 55, .2); /* خطوط الفواصل باللون الذهبي الخفيف */
-  --white: #0d2c24;
+  --black: #0b2b22;        /* أخضر عميق فاخر للشريط العلوي والفوتر */
+  --black-2: #072019;      /* درجة تباين للبطاقات */
+  --ivory: #103d30;        /* لون خلفية الموقع المأخوذة من الشعار (أفتح وأوضح) */
+  --cream: #164f3f;        /* لون للأقسام والبطاقات الفرعية */
+  --beige: #d8b776;        /* بيج ذهبي ناعم */
+  --gold: #e2c07d;         /* درجة الذهب الفاتحة في لوجو سراقة */
+  --text: #f5f4ef;         /* نصوص واضحة ومقروءة */
+  --muted: #b0c9c0;        /* أخضر هادئ فاتح */
+  --line: rgba(226, 192, 125, 0.25); /* فواصل ذهبية خفيفة */
+  --white: #103d30;
   --serif: "Cormorant Garamond", Georgia, serif;
   --sans: "DM Sans", Arial, sans-serif;
---serif-ar: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;  
+  --serif-ar: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;  
   --sans-ar: "Cairo", "DM Sans", Arial, sans-serif;
   --transition: .35s cubic-bezier(.22, 1, .36, 1);
 }
@@ -770,12 +770,12 @@ html[lang="ar"] .sort-wrapper label {
   pointer-events: none;
 }
 
-/* بطانة الكارت الداخلية الزيتية الداكنة */
+/* بطانة الكارت المتناغمة مع الدرجة الفاتحة الجديدة */
 .product-card::after {
   content: "";
   position: absolute;
   inset: 2px;
-  background: linear-gradient(180deg, #092019 0%, #061914 100%);
+  background: linear-gradient(180deg, #134637 0%, #0c3327 100%);
   border-radius: 14px;
   z-index: -2;
   pointer-events: none;
@@ -2119,13 +2119,7 @@ body.dark-mode .lang-btn {
     margin-right: 20px;
   }
 
-  .products-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 
-  .product-image-wrap {
-    height: 380px;
-  }
 
   .collections-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2293,14 +2287,6 @@ body.dark-mode .lang-btn {
     padding: 13px 0;
   }
 
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 35px 12px;
-  }
-
-  .product-image-wrap {
-    height: 350px;
-  }
 
   .product-actions {
     display: none;
@@ -5062,5 +5048,49 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   .hero-main-title {
     font-size: clamp(26px, 7vw, 34px) !important;
     line-height: 1.3 !important;
+  }
+}
+/* =========================================================
+   تنسيق كروت العطور للموبايل: كارت واحد رأسي (ملموم وأنيق)
+   ========================================================= */
+@media (max-width: 650px) {
+  .products-grid {
+    grid-template-columns: 1fr !important; /* كارت واحد فقط في كل سطر */
+    gap: 24px !important;
+    max-width: 320px !important;           /* لمّ وتصغير الكارت ليظهر بتناسق كامل */
+    margin: 0 auto !important;
+  }
+
+  .product-card {
+    border-radius: 14px !important;
+  }
+
+  .product-image-wrap {
+    height: 280px !important;             /* تقليل ارتفاع الصورة ليظل الكارت ملموماً */
+    background: #0d362b !important;
+  }
+
+  .product-info {
+    padding: 12px 10px 8px !important;
+  }
+
+  .product-name {
+    font-size: 20px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .product-description {
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+    min-height: 0 !important;
+  }
+
+  .product-bottom {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+  }
+
+  .product-price {
+    font-size: 12px !important;
   }
 }
