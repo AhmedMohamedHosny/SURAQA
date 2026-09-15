@@ -5816,7 +5816,7 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     right: 0 !important;
     width: 100% !important;          /* أخذ عرض الكارت بالكامل */
     max-width: 100% !important;
-    font-size: 10px !important;      /* حجم خط مدروس ومصغر ليتسع للسطر كاملاً */
+    font-size: 5px !important;      /* حجم خط مدروس ومصغر ليتسع للسطر كاملاً */
     font-weight: 700 !important;
     line-height: 1 !important;
     white-space: nowrap !important;  /* سطر واحد بدون تقطيع */
