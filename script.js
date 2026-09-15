@@ -1,6 +1,6 @@
  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
-  getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, 
+  getFirestore, collection, onSnapshot, addDoc, doc, updateDoc,getDoc, 
   increment, setDoc, deleteDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -305,6 +305,7 @@ let currentPage = 1;
 const PRODUCTS_PER_PAGE = 8;
 let selectedSize = 50; // الحجم الافتراضي 50 مل
 let currentAdminWa = "201016118242";
+let activeCoupon = null; // يحفظ بيانات الكوبون النشط
 // نسب تسعير الأحجام بناءً على السعر الأساسي للـ 50 مل
 const SIZE_MULTIPLIERS = {
   30: 0.65,  // 30 مل
@@ -681,10 +682,23 @@ function getCartCount() {
   }, 0);
 }
 
+// دالة مساعدة لحساب سعر الزجاجة الواحدة بعد خصم الكوبون
+function getItemDiscountedPrice(price) {
+  if (!activeCoupon) return price;
+  if (activeCoupon.type === "percent") {
+    return Math.round(price * (1 - (activeCoupon.value / 100)));
+  } else if (activeCoupon.type === "fixed") {
+    return Math.max(0, price - activeCoupon.value);
+  }
+  return price;
+}
+
 function getCartTotal() {
   return cart.reduce((total, item) => {
     const details = getCartItemDetails(item);
-    return details ? total + (details.price * item.quantity) : total;
+    if (!details) return total;
+    const finalItemPrice = getItemDiscountedPrice(details.price);
+    return total + (finalItemPrice * item.quantity);
   }, 0);
 }
 
@@ -764,13 +778,26 @@ function updateCartUI() {
     const details = getCartItemDetails(item);
     if (!details) return "";
 
+    const originalPrice = Number(details.price);
+    const discountedPrice = getItemDiscountedPrice(originalPrice);
+    const hasDiscount = activeCoupon && discountedPrice < originalPrice;
+
     return `
       <div class="cart-item">
         <img class="cart-item-image" src="${details.image}" alt="${escapeHtml(details.name)}" loading="lazy">
         <div class="cart-item-info">
           <span class="cart-item-category">${escapeHtml(details.categoryLabel)} · <strong style="color:var(--gold);">${details.size}</strong></span>
           <h3 class="cart-item-name">${escapeHtml(details.name)}</h3>
-          <span class="cart-item-price">${formatPrice(details.price)}</span>
+          
+          <div class="cart-item-price-wrap" style="margin-bottom: 6px;">
+            ${hasDiscount ? `
+              <span style="text-decoration: line-through; opacity: 0.55; font-size: 11px; margin-left: 6px;">${formatPrice(originalPrice)}</span>
+              <span style="color: var(--success, #2ecc71); font-weight: 800;">${formatPrice(discountedPrice)}</span>
+            ` : `
+              <span class="cart-item-price">${formatPrice(originalPrice)}</span>
+            `}
+          </div>
+
           <div class="cart-item-controls">
             <button class="cart-qty-btn" data-cart-action="decrease" data-id="${details.id}" data-size="${item.size || ''}">−</button>
             <span class="cart-qty">${item.quantity}</span>
@@ -1570,12 +1597,7 @@ let logoClicks = 0;
 let clickTimer;
 
 function checkAdminAuth() {
-  const pass = prompt("أدخل كلمة سر لوحة التحكم:");
-  if (pass === ADMIN_PASS) {
-    window.location.href = "admin.html";
-  } else if (pass !== null) {
-    alert("كلمة السر غير صحيحة!");
-  }
+  window.location.href = "admin.html";
 }
 
 // فتح لوحة التحكم عند الضغط 5 مرات على لوجو المتجر أو لوجو شاشة الإغلاق
