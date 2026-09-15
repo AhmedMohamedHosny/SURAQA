@@ -442,6 +442,20 @@ input, select, textarea {
 
   <!-- شريط الرأس -->
   <header class="top-bar">
+    <!-- شاشة قفل الأمان للدخول للوحة التحكم -->
+  <div id="adminAuthLockScreen" style="position:fixed; inset:0; background:#071914; z-index:999999; display:flex; align-items:center; justify-content:center; padding:15px;">
+    <div style="background:#0a221c; border:1px solid #d4af37; border-radius:12px; padding:32px 24px; width:min(380px, 92vw); text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.85);">
+      <div style="font-size:42px; margin-bottom:12px;">🔒</div>
+      <h2 style="color:#d4af37; font-size:18px; font-weight:900; margin-bottom:6px;">منطقة المشرفين فقط</h2>
+      <p style="color:#8da49c; font-size:11.5px; margin-bottom:20px; line-height:1.6;">لوحة تحكم عطور سراقة محمية. يرجى إدخال كلمة المرور للمتابعة.</p>
+      
+      <form id="adminLoginForm" onsubmit="event.preventDefault(); submitAdminLogin();">
+        <input type="password" id="adminLoginInput" placeholder="أدخل كلمة المرور..." autocomplete="current-password" required style="width:100%; box-sizing:border-box; background:#071914; border:1px solid rgba(212,175,55,0.3); color:#fff; padding:12px; border-radius:6px; font-size:13px; text-align:center; outline:none; margin-bottom:14px;">
+        <button type="submit" style="width:100%; background:linear-gradient(135deg, #d4af37, #b8972e); color:#071914; font-weight:800; border:none; padding:12px; border-radius:6px; font-size:13px; cursor:pointer;">تسجيل الدخول للوحة التحكم</button>
+        <a href="index.html" style="display:block; color:#8da49c; font-size:11px; margin-top:14px; text-decoration:none;">➔ العودة لمتجر سراقة</a>
+      </form>
+    </div>
+  </div>
     <div class="brand-side">
       <img src="image/logo.png" alt="سراقة" class="brand-logo">
       <span class="brand-title">عطور سراقة — الإدارة والتحليلات</span>
@@ -642,6 +656,9 @@ input, select, textarea {
           <div style="display:flex; gap:8px; align-items:center;">
             <button type="button" class="btn-submit" id="exportExcelBtn" style="margin:0; padding:6px 14px; font-size:11px; background:#217346; color:#fff;">
               📊 تصدير شيت Excel
+            </button>
+            <button type="button" class="btn-exit" id="clearAllOrdersBtn" style="margin:0; padding:6px 14px; font-size:11px; background:#b91c1c;">
+              🗑️ تصفير وحذف جميع الطلبيات
             </button>
             <button class="stock-btn" style="width:auto; padding:4px 10px; font-size:11px;" onclick="openSection('inventorySec')">➔ العودة لإدارة العطور</button>
           </div>
@@ -954,43 +971,46 @@ input, select, textarea {
       document.getElementById("dropdownMenu")?.classList.toggle("show");
     });
 
-    // 1. ضغط الصورة المختارة من جهاز المشرف برمجياً
-    function compressImageFile(file, maxWidth = 700, quality = 0.8) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (e) => {
-          const img = new Image();
-          img.src = e.target.result;
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            let w = img.width, h = img.height;
-            if (w > maxWidth) {
-              h = Math.round((h * maxWidth) / w);
-              w = maxWidth;
-            }
-            canvas.width = w;
-            canvas.height = h;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL("image/jpeg", quality));
-          };
-        };
-      });
+// مفتاح ImgBB المجاني لرفع الصور سحابياً
+    const IMGBB_API_KEY = "2da2a4b7baa7f50622c27991b2071319";
+
+    async function uploadImageToImgBB(file) {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          return data.data.url;
+        } else {
+          throw new Error(data.error?.message || "فشل رفع الصورة");
+        }
+      } catch (err) {
+        console.error("ImgBB Upload Error:", err);
+        throw err;
+      }
     }
 
-    document.getElementById("pFileInput")?.addEventListener("change", async (e) => {
+document.getElementById("pFileInput")?.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      currentBase64Image = await compressImageFile(file);
-      const previewImg = document.getElementById("previewImgEl");
-      const previewName = document.getElementById("previewNameEl");
-      if (previewImg) previewImg.src = currentBase64Image;
-      if (previewName) previewName.textContent = file.name;
-      const prompt = document.getElementById("uploadPromptText");
-      const container = document.getElementById("imagePreviewContainer");
-      if (prompt) prompt.style.display = "none";
-      if (container) container.style.display = "flex";
+      toast("جاري رفع صورة العطر سحابياً... ⏳");
+      try {
+        currentBase64Image = await uploadImageToImgBB(file);
+        const previewImg = document.getElementById("previewImgEl");
+        const previewName = document.getElementById("previewNameEl");
+        if (previewImg) previewImg.src = currentBase64Image;
+        if (previewName) previewName.textContent = "✓ تم الرفع بنجاح";
+        document.getElementById("uploadPromptText").style.display = "none";
+        document.getElementById("imagePreviewContainer").style.display = "flex";
+        toast("تم رفع صورة العطر سحابياً بنجاح! ☁️");
+      } catch (err) {
+        toast("تعذر رفع الصورة! تحقق من الإنترنت.");
+      }
     });
 
     // 2. مراقبة العطور والمخزون والتعديل
@@ -1304,8 +1324,11 @@ function calcTotalStockPreview() {
             <td>${o.paymentMethod === "cod" ? "عند الاستلام" : "إلكتروني"}</td>
             <td><strong style="color:var(--gold);">${(o.pricing?.total || 0).toLocaleString("ar-EG")} ج</strong></td>
             <td><span style="color:${o.status === 'delivered' ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${o.status === 'delivered' ? 'تم التسليم' : 'جديد'}</span></td>
-            <td>
-              ${o.status !== 'delivered' ? `<button class="stock-btn" style="width:auto; padding:3px 8px; font-size:10px;" onclick="markDelivered('${o.id}')">✓ تأكيد التسليم</button>` : '—'}
+<td>
+              <div style="display:flex; align-items:center; gap:6px;">
+                ${o.status !== 'delivered' ? `<button class="stock-btn" style="width:auto; padding:3px 8px; font-size:10px;" onclick="markDelivered('${o.id}')">✓ تأكيد</button>` : '<span style="font-size:11px; color:var(--success);">مكتمل</span>'}
+                <button type="button" class="btn-card-delete" onclick="deleteSingleOrder('${o.id}')" title="حذف هذه الطلبية">✕</button>
+              </div>
             </td>
           </tr>
         `;
@@ -1831,18 +1854,20 @@ function calcTotalStockPreview() {
     let currentOfferImgBase64 = "";
 
     // 1. ضغط ومعاينة صورة العرض المرفوعة من الجهاز
-    document.getElementById("offerFileInput")?.addEventListener("change", async (e) => {
+document.getElementById("offerFileInput")?.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      currentOfferImgBase64 = await compressImageFile(file, 800, 0.85);
-      const previewImg = document.getElementById("offerPreviewImg");
-      const previewName = document.getElementById("offerPreviewName");
-      if (previewImg) previewImg.src = currentOfferImgBase64;
-      if (previewName) previewName.textContent = file.name;
-      const textPrompt = document.getElementById("offerUploadText");
-      const previewBox = document.getElementById("offerPreviewBox");
-      if (textPrompt) textPrompt.style.display = "none";
-      if (previewBox) previewBox.style.display = "flex";
+      toast("جاري رفع صورة العرض سحابياً... ⏳");
+      try {
+        currentOfferImgBase64 = await uploadImageToImgBB(file);
+        document.getElementById("offerPreviewImg").src = currentOfferImgBase64;
+        document.getElementById("offerPreviewName").textContent = "✓ تم الرفع بنجاح";
+        document.getElementById("offerUploadText").style.display = "none";
+        document.getElementById("offerPreviewBox").style.display = "flex";
+        toast("تم رفع صورة العرض بنجاح! ☁️");
+      } catch (err) {
+        toast("فشل رفع صورة العرض!");
+      }
     });
 
     // 2. نشر العرض في السحابة
@@ -1923,16 +1948,20 @@ await addDoc(offersCol, {
     let currentRevBase64 = "";
 
     // اختيار وضغط صورة رأي العميل
-    document.getElementById("revFileInput")?.addEventListener("change", async (e) => {
+document.getElementById("revFileInput")?.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      currentRevBase64 = await compressImageFile(file, 900, 0.85);
-      const img = document.getElementById("revPreviewImg");
-      const name = document.getElementById("revPreviewName");
-      if (img) img.src = currentRevBase64;
-      if (name) name.textContent = file.name;
-      document.getElementById("revUploadPrompt").style.display = "none";
-      document.getElementById("revPreviewBox").style.display = "flex";
+      toast("جاري رفع سكرين الرأي سحابياً... ⏳");
+      try {
+        currentRevBase64 = await uploadImageToImgBB(file);
+        document.getElementById("revPreviewImg").src = currentRevBase64;
+        document.getElementById("revPreviewName").textContent = "✓ تم الرفع بنجاح";
+        document.getElementById("revUploadPrompt").style.display = "none";
+        document.getElementById("revPreviewBox").style.display = "flex";
+        toast("تم رفع سكرين الواتساب بنجاح! 💬");
+      } catch (err) {
+        toast("فشل رفع صورة التجربة!");
+      }
     });
 
     // حفظ ونشر الرأي
@@ -2067,6 +2096,83 @@ await addDoc(offersCol, {
         saveBtn.textContent = "حفظ وتحديث أسعار الشحن بالمتجر 🚚";
       }
     });
+    // 1. حذف طلبية واحدة فردية بعلامة (✕)
+    window.deleteSingleOrder = async function(id) {
+      const ord = allOrders.find(x => x.id === id);
+      const name = ord?.customer?.name || "هذا الطلب";
+
+      if (!confirm(`هل أنت متأكد من حذف طلبية "${name}"؟ سيتم تحديث الإحصائيات تلقائياً.`)) return;
+
+      try {
+        await deleteDoc(doc(db, "orders", id));
+        toast("تم حذف الطلبية وتحديث الإحصائيات بنجاح! 🗑️");
+      } catch (err) {
+        toast("حدث خطأ أثناء محاولة حذف الطلبية!");
+      }
+    };
+
+    // 2. تصفير وحذف جميع الطلبيات مع طلب كلمة السر للتأكيد
+    document.getElementById("clearAllOrdersBtn")?.addEventListener("click", async () => {
+      if (allOrders.length === 0) {
+        alert("سجل الطلبات فارغ بالفعل!");
+        return;
+      }
+
+      const pass = prompt("تحذير: هذا الإجراء سيحذف كافة الطلبات المسجلة ويصفر الأرباح للصفر!\nأدخل كلمة مرور المشرف للتأكيد:");
+      if (!pass || pass.trim() !== correctAdminPass) {
+        if (pass !== null) alert("كلمة المرور غير صحيحة! تم إلغاء العملية.");
+        return;
+      }
+
+      if (!confirm(`هل أنت متأكد تماماً من حذف جميع الطلبات (${allOrders.length} طلبية) وتصفير السجل؟`)) return;
+
+      try {
+        const deletePromises = allOrders.map(o => deleteDoc(doc(db, "orders", o.id)));
+        await Promise.all(deletePromises);
+        toast("تم تصفير سجل الطلبات والإحصائيات بالكامل للصفر! 🧹");
+      } catch (err) {
+        toast("حدث خطأ أثناء تصفير السجل!");
+      }
+    });
+    /* =========================================================
+       نظام حماية وقفل لوحة التحكم (Admin Auth Guard)
+       ========================================================= */
+    let correctAdminPass = "01016118242"; // كلمة السر الافتراضية لسراقة
+
+    // فحص الجلسة
+    function checkAuthSession() {
+      const isLogged = sessionStorage.getItem("suraqa_admin_authenticated");
+      const lockEl = document.getElementById("adminAuthLockScreen");
+      if (isLogged === "true") {
+        if (lockEl) lockEl.style.display = "none";
+      } else {
+        if (lockEl) lockEl.style.display = "flex";
+      }
+    }
+
+    // التحقق من كلمة السر
+    window.submitAdminLogin = function() {
+      const input = document.getElementById("adminLoginInput");
+      const val = input ? input.value.trim() : "";
+
+      if (val === correctAdminPass) {
+        sessionStorage.setItem("suraqa_admin_authenticated", "true");
+        const lockEl = document.getElementById("adminAuthLockScreen");
+        if (lockEl) lockEl.style.display = "none";
+        toast("أهلاً بك في لوحة تحكم عطور سراقة! 💎");
+      } else {
+        alert("كلمة المرور غير صحيحة! تم حظر الوصول.");
+        if (input) input.value = "";
+      }
+    };
+
+    // تسجيل الخروج وسحب الصلاحية عند الضغط على خروج للمتجر
+    document.querySelector(".btn-exit")?.addEventListener("click", () => {
+      sessionStorage.removeItem("suraqa_admin_authenticated");
+    });
+
+    checkAuthSession();
+    
   </script>
 </body>
 </html>
