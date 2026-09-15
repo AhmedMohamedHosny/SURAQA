@@ -700,9 +700,21 @@ html[lang="ar"] .sort-wrapper label {
 .product-card::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  border: 1px solid rgba(226, 192, 125, 0.3);
+  top: -65%;
+  left: -65%;
+  width: 230%;
+  height: 230%;
+  background: conic-gradient(
+    transparent 0deg,
+    transparent 140deg,
+    #10b981 190deg,               /* زمردي مشع خفيف */
+    rgba(212, 175, 55, 0.3) 220deg,
+    #c59b27 260deg,               /* ذهبي غامق راقي ومصقول */
+    #e6ca65 275deg,               /* سن لمعة ذهبية */
+    transparent 310deg
+  );
+  animation: dualToneSpin 6.5s linear infinite;
+  z-index: -3;
   pointer-events: none;
 }
 
@@ -778,6 +790,11 @@ html[lang="ar"] .sort-wrapper label {
               0 0 10px rgba(16, 185, 129, 0.2);
 }
 
+/* الحركات (Keyframes) */
+@keyframes dualToneSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 @keyframes glassSheenPass {
   0%, 30% { transform: translateX(-150%); }
@@ -2784,7 +2801,15 @@ body.dark-mode .lang-btn {
     bottom: 20px;
   }
   }
-
+/* TRUST STRIP */
+.trust-strip {
+  max-width: 1400px;
+  margin: 0 auto 20px;
+  padding: 0 5%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
 
 /* =========================================================
    شريط مميزات سراقة (كيرف انسيابي + إضاءة ذهبية متوهجة)
@@ -2925,6 +2950,28 @@ html[lang="ar"] .trust-item p {
   font-size: 12px;
 }
 
+@media (max-width: 800px) {
+  .trust-strip {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 0 3%;
+  }
+
+  .trust-item {
+    padding: 10px 4px;
+    gap: 5px;
+  }
+
+  .trust-icon {
+    font-size: 14px;
+  }
+
+  .trust-item p,
+  html[lang="ar"] .trust-item p {
+    font-size: 8.5px;
+    line-height: 1.3;
+  }
+}
 
 /* TESTIMONIALS */
 .testimonials-section {
@@ -3160,6 +3207,27 @@ html[dir="ltr"] .sf-option {
   transform: translateY(-15px);
 }
 
+.ticker-move:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  font-family: var(--sans-ar);
+  font-size: 14px; /* حجم خط ممتاز ومناسب للعين */
+  font-weight: 600;
+  color: #d4af37;
+  padding: 0 80px; /* مسافة مريحة جداً بين الجمل */
+  display: inline-block;
+}
+
+@keyframes tickerSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
 
 /* ضبط الهيدر والمحتوى أسفل الشريط العلوي */
 .navbar {
@@ -5858,4 +5926,45 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   .footer-bottom-glow {
     filter: blur(14px) !important;
   }
+}
+/* =========================================================
+   تسريع السكرول الشامل وفك الضغط عن المعالج (Zero-Lag Engine)
+   ========================================================= */
+
+/* 1. إعطاء كل حاوية رئيسية طبقة رندر مستقلة لمنع إعادة رسم الصفحة */
+.hero,
+.trust-strip,
+.shop-section,
+.why-section,
+.story-section,
+.testimonials-section,
+.footer {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 2. تسريع حركة السكرول على شاشات اللمس والآيفون */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 3. إلغاء معالجة العناصر البعيدة عن مجال الرؤية حتى يصل إليها المستخدم */
+.product-card,
+.collection-card,
+.testimonial-card,
+.review-screen-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 350px;
+}
+
+/* 4. كبح إعادة حساب الظلال والفلاتر الثقيلة أثناء السكرول السريع */
+.trust-item,
+.shop-custom-frame,
+.hero-actions-dock,
+.footer::after,
+.footer-bottom-glow {
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
