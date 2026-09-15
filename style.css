@@ -675,68 +675,135 @@ html[lang="ar"] .sort-wrapper label {
 }
 
 /* =========================================================
-   فريم الضوء الذهبي والعاجي الفاخر المتحرك لكروت العطور
+   فريم الكريستال الزمردي والذهب الملكي المعتق (سراقة)
    ========================================================= */
 .product-card {
   min-width: 0;
   position: relative;
   border-radius: 16px;
-  padding: 2px; /* سماكة الإطار المضيء */
-  background: transparent;
+  padding: 2px;
+  background: rgba(18, 56, 46, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55),
+              inset 0 0 0 1px rgba(212, 175, 55, 0.22); /* إطار زجاج مصنفر خافت */
+  cursor: pointer;
 }
 
-/* شعاع الضوء الفاتح المتحرك الدوار (360 درجة) */
+/* 1. التدرج اللوني المزدوج (Dual-Tone Shift): ذهبي غامق ملكي + زمردي مشع */
 .product-card::before {
   content: "";
   position: absolute;
-  top: -60%;
-  left: -60%;
-  width: 220%;
-  height: 220%;
+  top: -65%;
+  left: -65%;
+  width: 230%;
+  height: 230%;
   background: conic-gradient(
     transparent 0deg,
-    transparent 160deg,
-    rgba(212, 175, 55, 0.2) 200deg,
-    rgba(255, 245, 205, 0.95) 260deg, /* لمعة عاجية فاتحة وبراقة */
-    #ffd700 280deg,                  /* ذهبي ساطع */
-    transparent 320deg
+    transparent 140deg,
+    #10b981 190deg,               /* زمردي مشع خفيف */
+    rgba(212, 175, 55, 0.3) 220deg,
+    #c59b27 260deg,               /* ذهبي غامق راقي ومصقول */
+    #e6ca65 275deg,               /* سن لمعة ذهبية */
+    transparent 310deg
   );
-  animation: cardLightBeam 5s linear infinite;
+  animation: dualToneSpin 6.5s linear infinite;
+  z-index: -3;
+  pointer-events: none;
+}
+
+/* 2. لمعة الزجاج المصنفر (Sheen Sweep) تمر قطرياً كل 4 ثوانٍ */
+.product-card .glass-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 250, 230, 0.22) 50%, /* لمعة عاجية ناعمة كعكس الشمس */
+    transparent 60%,
+    transparent 100%
+  );
+  transform: translateX(-150%);
+  animation: glassSheenPass 4.5s ease-in-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* 3. كشاف الماوس التفاعلي (Spotlight Follower) */
+.product-card .spotlight-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: radial-gradient(
+    320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(212, 175, 55, 0.16),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.product-card:hover .spotlight-glow {
+  opacity: 1;
+}
+
+/* 4. رذاذ ومسحوق الذهب المتلألئ داخل الزوايا (Gold Dust) */
+.product-card .gold-dust {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 15% 20%, rgba(220, 175, 55, 0.8) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 15%, rgba(255, 235, 160, 0.9) 50%, transparent 100%),
+    radial-gradient(2px 2px at 70% 85%, rgba(200, 155, 40, 0.7) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 25% 75%, rgba(16, 185, 129, 0.7) 50%, transparent 100%);
+  opacity: 0.35;
+  animation: dustSparkle 3s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* بطانة الكارت الداخلية الزيتية الداكنة */
+.product-card::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(180deg, #092019 0%, #061914 100%);
+  border-radius: 14px;
   z-index: -2;
   pointer-events: none;
 }
 
-/* العازل والخلفية الملكية الداخلية لحماية المحتوى */
-.product-card::after {
-  content: "";
-  position: absolute;
-  inset: 2px; /* يترك مسافة 2px ليظهر الإطار المتحرك حوله */
-  background: linear-gradient(180deg, #0c2720 0%, #061914 100%);
-  border-radius: 14px;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* تأثير التوهج وارتفاع الكارت عند وقوف الماوس */
+/* ارتفاع الكارت وتوهجه عند اللمس */
 .product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 
-              0 0 25px rgba(212, 175, 55, 0.4);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.85),
+              0 0 25px rgba(197, 155, 39, 0.35),
+              0 0 10px rgba(16, 185, 129, 0.2);
 }
 
-@keyframes cardLightBeam {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+/* الحركات (Keyframes) */
+@keyframes dualToneSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes glassSheenPass {
+  0%, 30% { transform: translateX(-150%); }
+  70%, 100% { transform: translateX(150%); }
+}
+
+@keyframes dustSparkle {
+  0% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 0.65; transform: translateY(-3px); }
+  100% { opacity: 0.25; transform: translateY(2px); }
 }
 
 .product-image-wrap {
