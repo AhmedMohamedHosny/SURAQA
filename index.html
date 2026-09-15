@@ -467,7 +467,16 @@
 
     <div class="cart-items" id="cartItems"></div>
 
-    <div class="cart-footer" id="cartFooter">
+<div class="cart-footer" id="cartFooter">
+      <!-- خانة كود الخصم (Promo Code) -->
+      <div class="coupon-box" style="margin-bottom: 14px;">
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="couponCodeInput" placeholder="أدخل كود الخصم (مثال: SURAQA10)" style="flex:1; padding:9px 12px; background:var(--cream); border:1px solid var(--line); border-radius:4px; color:var(--text); font-size:12px; text-transform:uppercase; outline:none;">
+          <button type="button" id="applyCouponBtn" style="background:var(--gold); color:#071914; font-weight:800; font-size:11px; padding:0 14px; border-radius:4px; border:none; cursor:pointer;">تطبيق</button>
+        </div>
+        <div id="couponStatusMsg" style="font-size:11px; margin-top:6px; display:none; font-weight:700;"></div>
+      </div>
+
       <div class="cart-summary">
         <span data-ar="الإجمالي" data-en="Subtotal">الإجمالي</span>
         <strong id="cartTotal">0 EGP</strong>
@@ -736,10 +745,14 @@
         </div>
 
         <!-- ملخص الفاتورة -->
-        <div class="checkout-summary">
+<div class="checkout-summary">
           <div class="summary-line">
             <span>قيمة المنتجات:</span>
             <span id="summarySubtotal">0 جنيه</span>
+          </div>
+          <div class="summary-line" id="discountLineRow" style="display:none; color:var(--success, #2ecc71); font-weight:700;">
+            <span>قيمة الخصم المُطبق:</span>
+            <span id="summaryDiscount">- 0 جنيه</span>
           </div>
           <div class="summary-line">
             <span>مصاريف الشحن:</span>
