@@ -119,13 +119,13 @@ html[dir="rtl"] .announcement-close {
 }
 
 .navbar {
-  height: 78px;
+  height: 90px; /* زيادة ارتفاع النافبار ليتسع للشعار الكبير براحة */
   width: 100%;
-background: rgba(10, 34, 28, .95);  
+  background: rgba(10, 34, 28, .95);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   position: sticky;
-  top: 0;
+  top: 40px;
   z-index: 1000;
   border-bottom: 1px solid transparent;
   transition: .3s ease;
@@ -153,32 +153,37 @@ background: rgba(10, 34, 28, .95);
   font-weight: 600;
   letter-spacing: 7px;
 }
-/* تنسيقات وتكبير لوجو سراقة الرئيسي */
+/* =========================================================
+   تكبير لوجو سراقة الرئيسي (للكمبيوتر واللابتوب)
+   ========================================================= */
 .brand-logo-wrap {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  text-decoration: none;
+  gap: 14px !important;
+  text-decoration: none !important;
+  height: 100% !important;
 }
 
 .nav-brand-img {
-  height: 52px !important; /* تكبير الصورة بشكل واضح */
+  height: 68px !important;       /* تكبير أيقونة اللوجو بوضوح تام */
+  max-height: 72px !important;
   width: auto !important;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-  transition: transform 0.25s ease;
+  object-fit: contain !important;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5)) !important;
+  transition: transform 0.3s ease !important;
 }
 
 .brand-logo-wrap:hover .nav-brand-img {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .nav-brand-txt {
   font-family: var(--serif-ar, 'Cairo', serif) !important;
-  font-size: 26px !important;
+  font-size: 32px !important;     /* تكبير كلمة سراقة لتناسب حجم اللوجو */
   font-weight: 900 !important;
   color: var(--gold) !important;
-  letter-spacing: 0 !important;
+  letter-spacing: -0.5px !important;
+  line-height: 1 !important;
 }
 
 .desktop-nav {
@@ -4850,3 +4855,29 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     height: 260px;
   }
 }
+/* ضبط وتكبير اللوجو على الموبايل */
+  .navbar {
+    height: 78px !important; /* ارتفاع مريح على الموبايل */
+  }
+
+  .logo.brand-logo-wrap {
+    order: 1;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .logo .nav-brand-img {
+    height: 52px !important;  /* حجم كبير وظاهر وممتاز على شاشة الهاتف */
+    max-height: 54px !important;
+    width: auto !important;
+    display: block !important;
+  }
+
+  .logo .nav-brand-txt {
+    display: inline-block !important; /* إظهار الاسم بجانب الشعار */
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    color: var(--gold) !important;
+    line-height: 1 !important;
+  }
