@@ -5787,36 +5787,51 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
 
 /* للموبايل */
 @media (max-width: 650px) {
-/* تثبيت المحتوى جهة اليسار بعيداً عن زجاجة العطر وتنزيله لأسفل */
+/* 1. ضبط إطار الهيرو ليمتد على كامل الارتفاع */
   .hero {
-    align-items: flex-end !important; /* تنزيل كل محتوى الهيرو لأسفل الصورة */
-    padding-bottom: 30px !important;
+    align-items: stretch !important;
+    padding: 24px 15px 22px !important; /* مسافة أمان من الأعلى والأسفل */
   }
 
+  /* 2. توزيع المحتوى: العنوان فوق والأزرار في قاع الكارت */
   .hero-content-shifted {
-    width: 65% !important;             /* حجز النصف الأيسر فقط من الصورة */
-    margin-left: 15px !important;       /* تثبيته أقصى اليسار */
-    margin-right: auto !important;
-    padding-left: 0 !important;
-    align-items: flex-start !important; /* محاذاة كل العناصر يساراً */
-    text-align: right !important;      /* اتجاه قراءة النص العربي */
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important; /* يرفع العنوان لأقصى الأعلى وينزل الأزرار لأقصى الأسفل */
+    align-items: stretch !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 10;
   }
 
+  /* 3. العنوان: فوق أقصى الشمال وبحجم مريح ومقروء */
   .hero-main-title {
-    font-size: 21px !important;        /* حجم مناسب للمساحة اليسرى */
+    align-self: flex-start !important; /* تثبيت في جهة اليسار */
+    width: 58% !important;              /* مساحة عرض كافية بدون ملامسة زجاجة العطر يميناً */
+    font-size: 21px !important;
     line-height: 1.35 !important;
-    margin-bottom: 6px !important;
-    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9) !important;
+    text-align: right !important;
+    margin: 6px 0 0 8px !important;     /* رفع العنوان لأعلى اليسار */
+    text-shadow: 0 3px 20px rgba(0, 0, 0, 0.95) !important;
   }
 
-  /* كارت الأزرار: نزل لأسفل بمساحة ومحاذاة يسار */
+  /* 4. كارت الأزرار: ثابت في الأسفل وفي منتصف الشاشة بالضبط */
   .hero-actions-dock {
-    padding: 5px 8px !important;
-    gap: 6px !important;
-    margin-top: 16px !important;        /* مسافة تفصل الأزرار وتنزّلها لتحت */
-    border-radius: 35px !important;
-    transform: scale(0.92);            /* لمّ الكارت ليكون متناسقاً */
-    transform-origin: right center;
+    align-self: center !important;      /* توسيط في المنتصف بالضبط */
+    margin: 0 auto !important;
+    padding: 6px 12px !important;
+    gap: 8px !important;
+    border-radius: 40px !important;
+    transform: scale(0.95);
+    background: rgba(16, 61, 48, 0.82) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .hero-dock-btn {
+    padding: 7px 14px !important;
+    font-size: 11px !important;
   }
 
   .hero-dock-btn {
