@@ -5787,51 +5787,51 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
 
 /* للموبايل */
 @media (max-width: 650px) {
-/* 1. ضبط إطار الهيرو ليمتد على كامل الارتفاع */
+/* ضبط إطار الهيرو ليمتد رأسياً بالكامل */
   .hero {
     align-items: stretch !important;
-    padding: 24px 15px 22px !important; /* مسافة أمان من الأعلى والأسفل */
+    padding: 24px 14px 20px !important;
   }
 
-  /* 2. توزيع المحتوى: العنوان فوق والأزرار في قاع الكارت */
+  /* توزيع عمودي: العنوان في القمة والأزرار في القاع */
   .hero-content-shifted {
     width: 100% !important;
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important; /* يرفع العنوان لأقصى الأعلى وينزل الأزرار لأقصى الأسفل */
+    justify-content: space-between !important;
     align-items: stretch !important;
     margin: 0 !important;
     padding: 0 !important;
     z-index: 10;
   }
 
-  /* 3. العنوان: فوق أقصى الشمال وبحجم مريح ومقروء */
+  /* العنوان: مثبت أقصى اليسار مع تصغير الخط */
   .hero-main-title {
-    align-self: flex-start !important; /* تثبيت في جهة اليسار */
-    width: 58% !important;              /* مساحة عرض كافية بدون ملامسة زجاجة العطر يميناً */
-    font-size: 21px !important;
+    align-self: flex-end !important;   /* في نظام RTL: تعني جهة اليسار تماماً */
+    width: 50% !important;             /* حجز النصف الأيسر فقط لعدم ملامسة الزجاجة */
+    font-size: 16.5px !important;      /* تصغير الخط ليكون ناعماً وأنيقاً */
     line-height: 1.35 !important;
-    text-align: right !important;
-    margin: 6px 0 0 8px !important;     /* رفع العنوان لأعلى اليسار */
-    text-shadow: 0 3px 20px rgba(0, 0, 0, 0.95) !important;
+    text-align: right !important;      /* محاذاة النص العربي */
+    margin: 4px 6px 0 auto !important; /* دفع العنوان لليسار وهبوط طفيف */
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95) !important;
   }
 
-  /* 4. كارت الأزرار: ثابت في الأسفل وفي منتصف الشاشة بالضبط */
+  /* كارت الأزرار: ثابت في الأسفل وموسّط تماماً */
   .hero-actions-dock {
-    align-self: center !important;      /* توسيط في المنتصف بالضبط */
+    align-self: center !important;     /* توسيط في منتصف الشاشة */
     margin: 0 auto !important;
-    padding: 6px 12px !important;
-    gap: 8px !important;
-    border-radius: 40px !important;
+    padding: 5px 10px !important;
+    gap: 6px !important;
+    border-radius: 35px !important;
     transform: scale(0.95);
-    background: rgba(16, 61, 48, 0.82) !important;
+    background: rgba(16, 61, 48, 0.85) !important;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
   }
 
   .hero-dock-btn {
-    padding: 7px 14px !important;
-    font-size: 11px !important;
+    padding: 6px 12px !important;
+    font-size: 10.5px !important;
   }
 
   .hero-dock-btn {
