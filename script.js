@@ -304,7 +304,7 @@ let selectedProduct = null;
 let currentPage = 1;
 const PRODUCTS_PER_PAGE = 8;
 let selectedSize = 50; // الحجم الافتراضي 50 مل
-
+let currentAdminWa = "201016118242";
 // نسب تسعير الأحجام بناءً على السعر الأساسي للـ 50 مل
 const SIZE_MULTIPLIERS = {
   30: 0.65,  // 30 مل
@@ -1493,7 +1493,7 @@ ${receiptMessageText}
 
     showToast("تم تأكيد الطلب بنجاح! 🎉", "جاري توجيهك إلى واتساب...");
 
-    const waUrl = `https://wa.me/201016118242?text=${encodeURIComponent(waMessage)}`;
+const waUrl = `https://wa.me/${currentAdminWa}?text=${encodeURIComponent(waMessage)}`;   
     setTimeout(() => {
       window.open(waUrl, "_blank");
     }, 1000);
@@ -1659,7 +1659,21 @@ const THEME_PRESETS = {
 onSnapshot(doc(db, "settings", "storeConfig"), (docSnap) => {
   if (!docSnap.exists()) return;
   const cfg = docSnap.data();
+if (cfg.whatsappNumber) {
+    let cleanNum = String(cfg.whatsappNumber).replace(/\D/g, "");
+    if (cleanNum.startsWith("0")) {
+      cleanNum = "2" + cleanNum;
+    } else if (!cleanNum.startsWith("20")) {
+      cleanNum = "20" + cleanNum;
+    }
+    currentAdminWa = cleanNum;
 
+    // تحديث روابط الواتساب في الصفحة وزر شاشة الإغلاق
+    const waFloating = document.querySelector(".whatsapp-btn");
+    if (waFloating) waFloating.href = `https://wa.me/${currentAdminWa}`;
+    const closedWa = document.querySelector(".closed-wa-btn");
+    if (closedWa) closedWa.href = `https://wa.me/${currentAdminWa}`;
+  }
   // 1. تفعيل / إلغاء شاشة الإغلاق
   const closedScreen = document.getElementById("storeClosedScreen");
   if (closedScreen) {
@@ -2074,22 +2088,21 @@ function renderHomeReviews() {
   if (!grid) return;
 
   if (allCustomerReviews.length === 0) {
-    grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--muted); font-size:13px; padding:30px 0;">سيتم نشر آراء وتجارب العملاء قريباً.</div>`;
+    grid.innerHTML = `<div style="color:var(--muted); font-size:13px; padding:20px 0; text-align:center; width:100%;">سيتم نشر آراء وتجارب العملاء قريباً.</div>`;
     if (moreBtnWrap) moreBtnWrap.style.display = "none";
     return;
   }
 
-  // أخذ أول 4 صور فقط
-  const top4 = allCustomerReviews.slice(0, 4);
-
-  grid.innerHTML = top4.map(r => `
+  const cardsHtml = (list) => list.map(r => `
     <div class="review-screen-card" onclick="openReviewLightbox('${r.image}')">
       <img src="${r.image}" class="review-screen-img" alt="${r.author || 'رأي عميل'}">
       <div class="review-screen-caption">${r.author || 'رأي عميل عبر واتساب 💬'}</div>
     </div>
   `).join("");
 
-  // إخفاء زر المزيد إذا كان العدد الإجمالي 4 أو أقل
+  // تكرار القائمة مرتين لضمان استمرار الدوران الانسيابي بدون فراغات
+  grid.innerHTML = cardsHtml(allCustomerReviews) + cardsHtml(allCustomerReviews);
+
   if (moreBtnWrap) {
     moreBtnWrap.style.display = allCustomerReviews.length > 4 ? "block" : "none";
   }
