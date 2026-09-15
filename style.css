@@ -23,7 +23,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* ترك السكرول الافتراضي الفائق السرعة للنظام */
+  scroll-behavior: auto;
 }
 
 body {
@@ -5863,5 +5864,66 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
 
   .ticker-slide {
     font-size: 11px !important;
+  }
+}
+/* =========================================================
+   تحسين الأداء وإلغاء تهنيج وثقل السكرول للموبايل
+   ========================================================= */
+
+/* 1. تسريع الهاردوير لكروت العطور وإلغاء تدوير التدرج المستمر */
+.product-card {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+/* 2. على الموبايل: تقليل الـ Blur الذي ينهك المعالج */
+@media (max-width: 800px) {
+  /* إيقاف الفلاتر الشديدة على العناصر المتحركة */
+  .trust-item,
+  .shop-custom-frame,
+  .hero-actions-dock,
+  .product-card,
+  .navbar {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* تعويض الشفافية بألوان صريحة وأنيقة وسريعة جداً في الريندر */
+  .navbar {
+    background: #0a221c !important;
+  }
+  .trust-item {
+    background: #0d362b !important;
+  }
+  .shop-custom-frame {
+    background: #0d362b !important;
+  }
+  .hero-actions-dock {
+    background: rgba(16, 61, 48, 0.95) !important;
+  }
+  .product-card {
+    background: #0f3027 !important;
+  }
+
+  /* إيقاف الأنيميشن الدائري المستمر في خلفية كل كارت على الموبايل */
+  .product-card::before {
+    animation: none !important;
+    display: none !important;
+  }
+  .product-card .glass-sheen {
+    animation: none !important;
+    display: none !important;
+  }
+  .product-card .gold-dust {
+    display: none !important;
+  }
+
+  /* تخفيف بلور الفوتر */
+  .footer::after {
+    filter: blur(16px) !important;
+  }
+  .footer-bottom-glow {
+    filter: blur(14px) !important;
   }
 }
