@@ -20,15 +20,11 @@
 <body>
 
 <div class="ticker-wrap">
-  <div class="ticker-move">
-    <div class="ticker-item">✨ صلِّ على النَّبيِّ المختار ﷺ ✨</div>
-    <div class="ticker-item">💎 سُـراقَـة — جوهر الأناقة والرفاهية التي تُحس 💎</div>
-    <div class="ticker-item">🚚 توصيل مجاني للطلبات أكثر من 1,500 جنيه 🚚</div>
-    <div class="ticker-item">🔥 اكتشف عطورنا الفاخرة واصنع بصمتك الخاصة 🔥</div>
-    <div class="ticker-item">✨ صلِّ على النَّبيِّ المختار ﷺ ✨</div>
-    <div class="ticker-item">💎 سُـراقَـة — جوهر الأناقة والرفاهية التي تُحس 💎</div>
-    <div class="ticker-item">🚚 توصيل مجاني للطلبات أكثر من 1,500 جنيه 🚚</div>
-    <div class="ticker-item">🔥 اكتشف عطورنا الفاخرة واصنع بصمتك الخاصة 🔥</div>
+  <div class="ticker-slider" id="tickerSlider">
+    <div class="ticker-slide active">✨ صلِّ على النَّبيِّ المختار ﷺ ✨</div>
+    <div class="ticker-slide">💎 سراقة — عطور تُحكى وأناقة تترك أثراً 💎</div>
+    <div class="ticker-slide">🚚 توصيل مجاني لكافة المحافظات للطلبات أكثر من 1,500 جنيه 🚚</div>
+    <div class="ticker-slide">🔥 اكتشف عطورنا الفاخرة واصنع حضورك الخاص 🔥</div>
   </div>
 </div>
 
@@ -99,22 +95,21 @@
 
   <main>
 
-    <!-- HERO SECTION -->
+<!-- HERO SECTION -->
     <div class="hero-container">
       <section class="hero" id="home">
         <img class="hero-bg-img" src="image/S1.png" alt="عطور سُـراقَـة الفاخرة">
         <div class="hero-overlay"></div>
-        <div class="hero-content">
-          <p class="eyebrow" data-ar="سُـراقَـة للعطور الفاخرة" data-en="SURAQA HAUTE PARFUMS">سُـراقَـة للعطور الفاخرة</p>
+        <div class="hero-content hero-content-shifted">
+          <!-- العنوان فقط مائل وموجّه لليسار -->
           <h1 class="hero-main-title" data-ar-html="عُطورٌ <em>تُحكى</em>..<br>وأناقةٌ <em>تَتركُ أثَراً</em>" data-en-html="Stories in Scent..<br><em>Elegance That Endures</em>">
             عُطورٌ <em>تُحكى</em>..<br>وأناقةٌ <em>تَتركُ أثَراً</em>
           </h1>
-          <p class="hero-text" data-ar="عطورٌ مستوحاة من أرقى العطور العالمية… لتترك أثرًا لا يُنسى.." data-en="Rare compositions crafted from the finest oils to define your presence and leave a timeless impression.">
-            عطورٌ مستوحاة من أرقى العطور العالمية… لتترك أثرًا لا يُنسى..
-          </p>
-          <div class="hero-buttons">
-            <a href="#shop" class="btn btn-light" data-ar="تسوّق التشكيلة" data-en="Shop Collection">تسوّق التشكيلة</a>
-            <a href="#about" class="btn btn-outline-light" data-ar="قصة سُـراقَـة" data-en="Explore SURAQA">قصة سُـراقَـة</a>
+
+          <!-- كارت الأزرار الزجاجي الأنيق بالأسفل -->
+          <div class="hero-actions-dock">
+            <a href="#shop" class="hero-dock-btn primary-dock-btn" data-ar="تسوّق التشكيلة " data-en="Shop Collection ">تسوّق التشكيلة </a>
+            <a href="#about" class="hero-dock-btn secondary-dock-btn" data-ar="قصة سُـراقَـة " data-en="Our Story ">قصة سُـراقَـة </a>
           </div>
         </div>
       </section>
