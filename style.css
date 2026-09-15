@@ -5785,63 +5785,65 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   transform: translateY(-2px);
 }
 
-/* للموبايل */
+/* =========================================================
+   تنسيق الموبايل: تثبيت العنوان يساراً وتوسيط الأزرار
+   ========================================================= */
 @media (max-width: 650px) {
-/* ضبط إطار الهيرو ليمتد رأسياً بالكامل */
   .hero {
-    align-items: stretch !important;
-    padding: 24px 14px 20px !important;
+    position: relative !important;
+    height: 390px !important;
+    min-height: 390px !important;
+    display: block !important; /* إلغاء تداخل الفليكس */
+    padding: 0 !important;
   }
 
-  /* توزيع عمودي: العنوان في القمة والأزرار في القاع */
   .hero-content-shifted {
+    position: absolute !important;
+    inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    align-items: stretch !important;
     margin: 0 !important;
     padding: 0 !important;
-    z-index: 10;
+    z-index: 10 !important;
+    pointer-events: none; /* لتمرير الضغطات إن وجدت */
   }
 
-  /* العنوان: مثبت أقصى اليسار مع تصغير الخط */
+  /* 1. العنوان: مثبت أقصى الشمال فوق بدقة ومصغر */
   .hero-main-title {
-    align-self: flex-end !important;   /* في نظام RTL: تعني جهة اليسار تماماً */
-    width: 50% !important;             /* حجز النصف الأيسر فقط لعدم ملامسة الزجاجة */
-    font-size: 16.5px !important;      /* تصغير الخط ليكون ناعماً وأنيقاً */
+    position: absolute !important;
+    top: 22px !important;            /* فوق */
+    left: 14px !important;           /* أقصى الشمال تماماً */
+    right: auto !important;          /* إلغاء اليمين نهائياً */
+    width: 52% !important;           /* واخد نص الشاشة الشمالي فقط */
+    font-size: 16px !important;      /* خط مصغر ورايق */
     line-height: 1.35 !important;
-    text-align: right !important;      /* محاذاة النص العربي */
-    margin: 4px 6px 0 auto !important; /* دفع العنوان لليسار وهبوط طفيف */
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95) !important;
+    text-align: right !important;    /* ضبط محاذاة القراءة العربية */
+    margin: 0 !important;
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.95) !important;
+    pointer-events: auto;
   }
 
-  /* كارت الأزرار: ثابت في الأسفل وموسّط تماماً */
+  /* 2. كارت الأزرار: في الأسفل وموسّط في السنتر بالمللي */
   .hero-actions-dock {
-    align-self: center !important;     /* توسيط في منتصف الشاشة */
-    margin: 0 auto !important;
-    padding: 5px 10px !important;
-    gap: 6px !important;
+    position: absolute !important;
+    bottom: 18px !important;         /* في قاع الكارت */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important; /* توسيط دقيق في المنتصف */
+    display: inline-flex !important;
+    margin: 0 !important;
+    padding: 6px 12px !important;
+    gap: 8px !important;
     border-radius: 35px !important;
-    transform: scale(0.95);
     background: rgba(16, 61, 48, 0.85) !important;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
-  }
-
-  .hero-dock-btn {
-    padding: 6px 12px !important;
-    font-size: 10.5px !important;
+    pointer-events: auto;
   }
 
   .hero-dock-btn {
     padding: 6px 12px !important;
     font-size: 10px !important;
-  }
-
-  .hero-dock-btn {
-    padding: 8px 14px !important;
-    font-size: 11px !important;
+    white-space: nowrap !important;
   }
 
   .ticker-slide {
