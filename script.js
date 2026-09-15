@@ -1031,7 +1031,7 @@ document.getElementById("wishlistNavBtn")?.addEventListener("click", () => {
   currentCategory = "wishlist";
   currentPage = 1;
 
-  document.querySelectorAll(".filter-btn").forEach(btn => {
+  document.querySelectorAll(".pill-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.category === "wishlist");
   });
 
@@ -1110,10 +1110,10 @@ const cartAction = event.target.closest("[data-cart-action]");
    ========================================================= */
 
 document.getElementById("categoryTabs")?.addEventListener("click", event => {
-  const button = event.target.closest(".filter-btn");
+  const button = event.target.closest(".pill-btn");
   if (!button) return;
 
-  document.querySelectorAll(".filter-btn").forEach(btn => {
+  document.querySelectorAll(".pill-btn").forEach(btn => {
     btn.classList.remove("active");
   });
 
