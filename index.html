@@ -32,18 +32,62 @@
   </div>
 </div>
 
-  <header class="navbar" id="navbar">
+<header class="navbar" id="navbar">
     <div class="nav-inner">
-      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="فتح القائمة" data-ar-aria="فتح القائمة" data-en-aria="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <!-- اللوجو الرئيسي أقصى اليمين -->
+      <a href="#home" class="logo brand-logo-wrap">
+        <img src="image/logo.png" alt="شعار سراقة" class="nav-brand-img">
+        <span class="nav-brand-txt">سراقة</span>
+      </a>
 
-<!-- اللوجو الرئيسي -->
-<a href="#home" class="logo brand-logo-wrap">
-  <img src="image/logo.png" alt="شعار سراقة" class="nav-brand-img">
-  <span class="nav-brand-txt">سراقة</span>
-</a>
       <nav class="desktop-nav" aria-label="التنقل الرئيسي">
+        <a href="#home" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+        <a href="#shop" data-ar="المتجر" data-en="Shop">المتجر</a>
+        <a href="#collections" data-ar="التشكيلات" data-en="Collections">التشكيلات</a>
+        <a href="#about" data-ar="من نحن" data-en="About">من نحن</a>
+        <a href="#footer" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a>        
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="بحث" data-ar-aria="بحث" data-en-aria="Search">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="m16 16 5 5"></path>
+          </svg>
+        </button>
+
+        <button class="lang-btn" id="langBtn" aria-label="تغيير اللغة" data-ar-aria="تغيير اللغة" data-en-aria="Change language">
+          <span id="langBtnText">EN</span>
+        </button>
+
+        <button class="icon-btn" id="themeBtn" aria-label="تبديل المظهر" data-ar-aria="تبديل المظهر" data-en-aria="Toggle theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"></path>
+          </svg>
+        </button>
+
+        <button class="icon-btn wishlist-nav-btn" id="wishlistNavBtn" aria-label="المفضلة" title="المفضلة">
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 1.5; width: 20px; height: 20px;">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+          </svg>
+          <span class="cart-count" id="wishlistCount">0</span>
+        </button>
+
+        <button class="cart-btn" id="cartBtn" aria-label="فتح السلة" data-ar-aria="فتح السلة" data-en-aria="Open cart">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5h2l1.7 10.2a2 2 0 0 0 2 1.8h7.9a2 2 0 0 0 1.9-1.5L21 8H7"></path>
+            <circle cx="10" cy="20" r="1"></circle>
+            <circle cx="18" cy="20" r="1"></circle>
+          </svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+
+        <!-- زر الموبايل منقول إلى يسار النافبار بجانب السلة -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="فتح القائمة" data-ar-aria="فتح القائمة" data-en-aria="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
         <a href="#home" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
         <a href="#shop" data-ar="المتجر" data-en="Shop">المتجر</a>
         <a href="#collections" data-ar="التشكيلات" data-en="Collections">التشكيلات</a>
