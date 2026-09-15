@@ -528,21 +528,25 @@ function productCard(product) {
         >
       </div>
 
-      <div class="product-info" data-action="open-full-page" data-id="${product.id}">
-        <div class="product-meta">
-          <span class="product-category">${escapeHtml(productCategoryLabel(product))}</span>
+<div class="product-info" data-action="open-full-page" data-id="${product.id}">
+        <!-- السطر العلوي: اسم العطر وبجانبه شارة الفئة + التقييم بالنجوم -->
+        <div class="product-top-row">
+          <div class="name-badge-group">
+            <h3 class="product-name">${escapeHtml(productName(product))}</h3>
+            <span class="category-mini-badge">${escapeHtml(productCategoryLabel(product))}</span>
+          </div>
           <span class="rating">${stars(product.rating)}</span>
         </div>
 
-        <h3 class="product-name">${escapeHtml(productName(product))}</h3>
-
+        <!-- سطر الوصف المكبر المنسق -->
         <p class="product-description">
           ${escapeHtml(productDescription(product))}
         </p>
 
+        <!-- السطر السفلي: السعر وعدد التقييمات -->
         <div class="product-bottom">
           <span class="product-price">${formatPrice(product.price)}</span>
-          <span class="product-category">${product.reviews} ${escapeHtml(t("reviews"))}</span>
+          <span class="product-reviews-count">${product.reviews} ${escapeHtml(t("reviews"))}</span>
         </div>
       </div>
     </article>
