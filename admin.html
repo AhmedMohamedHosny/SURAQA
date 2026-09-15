@@ -1283,14 +1283,12 @@ function calcTotalStockPreview() {
       document.getElementById("pOldPrice").value = p.oldPrice || "";
       document.getElementById("pDesc").value = p.desc || "";
 
-      const base = Number(p.price || 0);
-      document.getElementById("pSize10").value = p.sizes?.[10] ?? Math.round((base * 0.3) / 10) * 10;
+const base = Number(p.price || 0);
       document.getElementById("pSize30").value = p.sizes?.[30] ?? Math.round((base * 0.65) / 10) * 10;
       document.getElementById("pSize50").value = p.sizes?.[50] ?? base;
       document.getElementById("pSize100").value = p.sizes?.[100] ?? Math.round((base * 1.7) / 10) * 10;
 
-      const stocks = p.stocks || { 10: 20, 30: 15, 50: 15, 100: 5 };
-      document.getElementById("pStock10").value = stocks[10] ?? 20;
+      const stocks = p.stocks || { 30: 15, 50: 15, 100: 5 };
       document.getElementById("pStock30").value = stocks[30] ?? 15;
       document.getElementById("pStock50").value = stocks[50] ?? 15;
       document.getElementById("pStock100").value = stocks[100] ?? 5;
@@ -1331,57 +1329,71 @@ function calcTotalStockPreview() {
       calcTotalStockPreview();
     });
 
-    // حفظ العطر الجديد أو التعديل
+// حفظ العطر الجديد أو التعديل
     document.getElementById("addPerfumeForm")?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const editId = document.getElementById("pEditId").value;
-      const basePrice = Number(document.getElementById("pPrice").value);
-
-      const size10 = Number(document.getElementById("pSize10").value) || Math.round((basePrice * 0.3) / 10) * 10;
-      const size30 = Number(document.getElementById("pSize30").value) || Math.round((basePrice * 0.65) / 10) * 10;
-      const size50 = Number(document.getElementById("pSize50").value) || basePrice;
-      const size100 = Number(document.getElementById("pSize100").value) || Math.round((basePrice * 1.7) / 10) * 10;
-
-      const stock10 = Number(document.getElementById("pStock10").value) || 0;
-      const stock30 = Number(document.getElementById("pStock30").value) || 0;
-      const stock50 = Number(document.getElementById("pStock50").value) || 0;
-      const stock100 = Number(document.getElementById("pStock100").value) || 0;
-      const totalStock = stock10 + stock30 + stock50 + stock100;
-
-      const perfumeData = {
-        name: document.getElementById("pName").value.trim(),
-        category: document.getElementById("pCategory").value,
-        price: basePrice,
-        oldPrice: document.getElementById("pOldPrice").value ? Number(document.getElementById("pOldPrice").value) : null,
-        stock: totalStock,
-        stocks: {
-          30: stock30,
-          50: stock50,
-          100: stock100
-        },
-        sizes: {
-          30: size30,
-          50: size50,
-          100: size100
-        },
-        desc: document.getElementById("pDesc").value.trim()
-      };
-
-      if (currentBase64Image) {
-        perfumeData.image = currentBase64Image;
+      const saveBtn = document.getElementById("submitPerfumeBtn");
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "جاري الحفظ والنشر...";
       }
 
-      if (editId) {
-        await updateDoc(doc(db, "perfumes", editId), perfumeData);
-        toast("تم تحديث أسعار ومخزون الأحجام بنجاح! ✓");
-      } else {
-        if (!perfumeData.image) perfumeData.image = "image/S1.png";
-        perfumeData.createdAt = new Date();
-        await addDoc(perfumesCol, perfumeData);
-        toast("تم إضافة العطر ونشره بالمتجر! 💎");
-      }
+      try {
+        const editId = document.getElementById("pEditId").value;
+        const basePrice = Number(document.getElementById("pPrice").value);
 
-      document.getElementById("cancelEditBtn")?.click();
+        const size30 = Number(document.getElementById("pSize30")?.value) || Math.round((basePrice * 0.65) / 10) * 10;
+        const size50 = Number(document.getElementById("pSize50")?.value) || basePrice;
+        const size100 = Number(document.getElementById("pSize100")?.value) || Math.round((basePrice * 1.7) / 10) * 10;
+
+        const stock30 = Number(document.getElementById("pStock30")?.value) || 0;
+        const stock50 = Number(document.getElementById("pStock50")?.value) || 0;
+        const stock100 = Number(document.getElementById("pStock100")?.value) || 0;
+        const totalStock = stock30 + stock50 + stock100;
+
+        const perfumeData = {
+          name: document.getElementById("pName").value.trim(),
+          category: document.getElementById("pCategory").value,
+          price: basePrice,
+          oldPrice: document.getElementById("pOldPrice").value ? Number(document.getElementById("pOldPrice").value) : null,
+          stock: totalStock,
+          stocks: {
+            30: stock30,
+            50: stock50,
+            100: stock100
+          },
+          sizes: {
+            30: size30,
+            50: size50,
+            100: size100
+          },
+          desc: document.getElementById("pDesc").value.trim()
+        };
+
+        if (currentBase64Image) {
+          perfumeData.image = currentBase64Image;
+        }
+
+        if (editId) {
+          await updateDoc(doc(db, "perfumes", editId), perfumeData);
+          toast("تم تحديث أسعار ومخزون الأحجام بنجاح! ✓");
+        } else {
+          if (!perfumeData.image) perfumeData.image = "image/S1.png";
+          perfumeData.createdAt = new Date();
+          await addDoc(perfumesCol, perfumeData);
+          toast("تم إضافة العطر ونشره بالمتجر! 💎");
+        }
+
+        document.getElementById("cancelEditBtn")?.click();
+      } catch (err) {
+        console.error("Save Perfume Error:", err);
+        toast("حدث خطأ أثناء حفظ العطر!");
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = document.getElementById("pEditId").value ? "تحديث بيانات وأحجام العطر 💾" : "حفظ العطر ونشره بالمتجر";
+        }
+      }
     });
 
     // 3. مراقبة الطلبات والأرباح
@@ -1406,17 +1418,15 @@ function calcTotalStockPreview() {
       renderOrdersTable();
       renderAnalytics();
     });
-// التعبئة التلقائية الذكية لأسعار الأحجام عند كتابة السعر الأساسي
+// ملء الأسعار تلقائياً للأحجام المتاحة فقط (30، 50، 100 مل)
     document.getElementById("pPrice")?.addEventListener("input", (e) => {
       const base = Number(e.target.value);
       if (base > 0) {
-        const s10 = document.getElementById("pSize10");
         const s30 = document.getElementById("pSize30");
         const s50 = document.getElementById("pSize50");
         const s100 = document.getElementById("pSize100");
 
         if (s50) s50.value = base;
-        if (s10) s10.value = Math.round((base * 0.3) / 10) * 10;
         if (s30) s30.value = Math.round((base * 0.65) / 10) * 10;
         if (s100) s100.value = Math.round((base * 1.7) / 10) * 10;
       }
