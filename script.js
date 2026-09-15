@@ -1663,8 +1663,8 @@ if (homeSec) {
    مراقبة إغلاق المتجر وتغيير الألوان الـ 22 تلقائياً للعملاء
    ========================================================= */
 const THEME_PRESETS = {
-  "emerald": { dark: "#071914", main: "#0a221c", card: "#0f3027", gold: "#d4af37", bg: "radial-gradient(circle at 85% 0%, rgba(212,175,55,0.06), transparent 26%), #071914" },
-  "obsidian": { dark: "#0a0a0a", main: "#121212", card: "#1a1a1a", gold: "#dfb743", bg: "radial-gradient(circle at 50% 0%, #1f1a10, #0a0a0a)" },
+"emerald": { dark: "#0b2b22", main: "#103d30", card: "#164f3f", gold: "#e2c07d", bg: "#103d30" },
+ "obsidian": { dark: "#0a0a0a", main: "#121212", card: "#1a1a1a", gold: "#dfb743", bg: "radial-gradient(circle at 50% 0%, #1f1a10, #0a0a0a)" },
   "royal-navy": { dark: "#060d1a", main: "#0b172e", card: "#102244", gold: "#e5c158", bg: "radial-gradient(circle at 80% 10%, #10254c, #060d1a)" },
   "velvet-burgundy": { dark: "#18060b", main: "#270c14", card: "#3a131e", gold: "#e6be65", bg: "radial-gradient(circle at 75% 15%, #42101f, #18060b)" },
   "imperial-purple": { dark: "#12081c", main: "#1c0f2b", card: "#29173e", gold: "#f3cc68", bg: "radial-gradient(circle at 85% 10%, #3a1c59, #12081c)" },
