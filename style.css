@@ -5300,3 +5300,206 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     padding: 1.5px 5px;
   }
 }
+/* =========================================================
+   فريم عنوان المتجر وكبسولات الفئات المضيئة
+   ========================================================= */
+
+/* 1. فريم العنوان الزجاجي الفاخر */
+.shop-custom-frame {
+  position: relative;
+  background: linear-gradient(135deg, rgba(22, 79, 63, 0.7), rgba(11, 43, 34, 0.9));
+  border: 1px solid rgba(226, 192, 125, 0.35);
+  border-radius: 20px;
+  padding: 24px 35px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35),
+              inset 0 0 20px rgba(226, 192, 125, 0.08);
+  overflow: hidden;
+}
+
+.shop-custom-frame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 140px;
+  height: 100%;
+  background: radial-gradient(circle at top right, rgba(226, 192, 125, 0.2), transparent 70%);
+  pointer-events: none;
+}
+
+.shop-frame-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.shop-frame-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--gold, #e2c07d);
+  background: rgba(226, 192, 125, 0.12);
+  border: 1px solid rgba(226, 192, 125, 0.3);
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.shop-frame-heading {
+  font-family: var(--serif-ar, 'Cairo', serif) !important;
+  font-size: clamp(28px, 4vw, 40px) !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.shop-frame-heading em {
+  color: var(--gold, #e2c07d) !important;
+  font-style: normal;
+  text-shadow: 0 0 15px rgba(226, 192, 125, 0.4);
+}
+
+.shop-frame-desc {
+  font-size: 13.5px;
+  color: var(--muted, #b0c9c0);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+/* 2. شريط الكبسولات المضيئة (Category Glow Pills) */
+.shop-toolbar-pills {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 35px;
+  flex-wrap: wrap;
+}
+
+.category-tabs-pills {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 2px;
+}
+
+.category-tabs-pills::-webkit-scrollbar {
+  display: none;
+}
+
+/* تصميم الكبسولة المضيئة */
+.pill-btn {
+  background: rgba(22, 79, 63, 0.5);
+  border: 1px solid rgba(226, 192, 125, 0.25);
+  color: var(--text, #f5f4ef);
+  padding: 9px 18px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pill-btn:hover {
+  border-color: var(--gold, #e2c07d);
+  color: var(--gold, #e2c07d);
+  transform: translateY(-2px);
+  box-shadow: 0 0 14px rgba(226, 192, 125, 0.3);
+}
+
+/* الكبسولة النشطة (المختارة) بتوهج نيون */
+.pill-btn.active {
+  background: linear-gradient(135deg, var(--gold, #e2c07d), #b8972e) !important;
+  color: #071914 !important;
+  border-color: var(--gold, #e2c07d) !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 18px rgba(226, 192, 125, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* صندوق الترتيب المضيء */
+.sort-wrapper-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 79, 63, 0.5);
+  border: 1px solid rgba(226, 192, 125, 0.25);
+  padding: 6px 14px;
+  border-radius: 50px;
+}
+
+.sort-wrapper-pill label {
+  font-size: 11px;
+  color: var(--muted, #b0c9c0);
+  font-weight: 700;
+}
+
+.sort-wrapper-pill select {
+  background: transparent;
+  border: none;
+  color: var(--gold, #e2c07d);
+  font-size: 11.5px;
+  font-weight: 800;
+  outline: none;
+  cursor: pointer;
+}
+
+.sort-wrapper-pill select option {
+  background: #0d362b;
+  color: #fff;
+}
+
+/* تجاوب شاشات الموبايل */
+@media (max-width: 768px) {
+  .shop-custom-frame {
+    padding: 18px 16px;
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  .shop-frame-inner {
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .shop-frame-heading {
+    font-size: 24px !important;
+  }
+
+  .shop-frame-desc {
+    font-size: 12px;
+  }
+
+  .shop-toolbar-pills {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+
+  .category-tabs-pills {
+    gap: 6px;
+    padding-bottom: 6px;
+  }
+
+  .pill-btn {
+    padding: 7px 13px;
+    font-size: 11px;
+  }
+
+  .sort-wrapper-pill {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
