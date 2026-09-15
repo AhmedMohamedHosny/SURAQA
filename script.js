@@ -2260,3 +2260,26 @@ document.addEventListener("mousemove", (e) => {
   card.style.setProperty("--mouse-x", `${x}px`);
   card.style.setProperty("--mouse-y", `${y}px`);
 });
+/* =========================================================
+   تشغيل الشريط العلوي بالثبات لـ 3 ثوانٍ لكل جملة
+   ========================================================= */
+(function initTickerSlider() {
+  const slides = document.querySelectorAll(".ticker-slide");
+  if (!slides || slides.length === 0) return;
+
+  let currentIdx = 0;
+  setInterval(() => {
+    const currentSlide = slides[currentIdx];
+    currentSlide.classList.remove("active");
+    currentSlide.classList.add("exit");
+
+    currentIdx = (currentIdx + 1) % slides.length;
+    const nextSlide = slides[currentIdx];
+    nextSlide.classList.remove("exit");
+    nextSlide.classList.add("active");
+
+    setTimeout(() => {
+      currentSlide.classList.remove("exit");
+    }, 600);
+  }, 3500); // 3.5 ثانية (3 ثوانٍ ثبات كامل + نصف ثانية انزلاق ناعم)
+})();
