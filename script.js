@@ -701,8 +701,15 @@ function getCartCount() {
 }
 
 // دالة مساعدة لحساب سعر الزجاجة الواحدة بعد خصم الكوبون
-function getItemDiscountedPrice(price) {
+function getItemDiscountedPrice(price, productId) {
   if (!activeCoupon) return price;
+
+  // التحقق هل الكوبون ينطبق على هذا العطر تحديداً
+  if (!activeCoupon.applyAll && activeCoupon.targetProducts) {
+    const isApplicable = activeCoupon.targetProducts.map(String).includes(String(productId));
+    if (!isApplicable) return price;
+  }
+
   if (activeCoupon.type === "percent") {
     return Math.round(price * (1 - (activeCoupon.value / 100)));
   } else if (activeCoupon.type === "fixed") {
@@ -715,7 +722,7 @@ function getCartTotal() {
   return cart.reduce((total, item) => {
     const details = getCartItemDetails(item);
     if (!details) return total;
-    const finalItemPrice = getItemDiscountedPrice(details.price);
+    const finalItemPrice = getItemDiscountedPrice(details.price, details.id);
     return total + (finalItemPrice * item.quantity);
   }, 0);
 }
@@ -1473,7 +1480,16 @@ const orderItems = cart.map(item => {
 
   try {
     await addDoc(ordersCol, orderData);
-
+if (activeCoupon && activeCoupon.code) {
+      try {
+        const couponDocRef = doc(db, "coupons", activeCoupon.code);
+        await updateDoc(couponDocRef, {
+          usedCount: increment(1)
+        });
+      } catch (couponErr) {
+        console.warn("Coupon increment skipped:", couponErr);
+      }
+    }
 for (const item of cart) {
       try {
         if (!String(item.id).startsWith("offer_")) {
@@ -2209,14 +2225,39 @@ window.handleApplyCoupon = async function() {
     btn.textContent = "...";
   }
 
-  try {
+try {
     const snap = await getDoc(doc(db, "coupons", code));
     if (snap.exists() && snap.data().active) {
-      activeCoupon = snap.data();
+      const cpnData = snap.data();
+
+      // 1. فحص تاريخ انتهاء الصلاحية
+      if (cpnData.expiryDate) {
+        const expiryTime = new Date(cpnData.expiryDate).getTime();
+        if (Date.now() > expiryTime) {
+          activeCoupon = null;
+          msg.style.display = "block";
+          msg.style.color = "#e74c3c";
+          msg.textContent = "عذراً، انتهت صلاحية هذا الكوبون!";
+          updateCartUI();
+          return;
+        }
+      }
+
+      // 2. فحص عدد مرات الاستخدام
+      if (cpnData.maxUses !== null && (cpnData.usedCount || 0) >= cpnData.maxUses) {
+        activeCoupon = null;
+        msg.style.display = "block";
+        msg.style.color = "#e74c3c";
+        msg.textContent = "عذراً، هذا الكوبون استنفد الحد الأقصى للاستخدام!";
+        updateCartUI();
+        return;
+      }
+
+      activeCoupon = cpnData;
       msg.style.display = "block";
       msg.style.color = "#2ecc71";
-      msg.textContent = `✓ تم تفعيل الخصم (${activeCoupon.type === 'percent' ? activeCoupon.value + '%' : activeCoupon.value + ' ج'}) على كل عبوة!`;
-      updateCartUI(); // إعادة حساب وتحديث كل منتج في السلة فوراً
+      msg.textContent = `✓ تم تفعيل الخصم (${activeCoupon.value}%) بنجاح!`;
+      updateCartUI();
     } else {
       activeCoupon = null;
       msg.style.display = "block";
@@ -2229,7 +2270,8 @@ window.handleApplyCoupon = async function() {
     msg.style.display = "block";
     msg.style.color = "#e74c3c";
     msg.textContent = "حدث خطأ أثناء فحص الكوبون، حاول مجدداً.";
-  } finally {
+  }
+  finally {
     if (btn) {
       btn.disabled = false;
       btn.textContent = "تطبيق";
