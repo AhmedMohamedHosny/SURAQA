@@ -447,16 +447,17 @@ input, select, textarea {
 
   <!-- شريط الرأس -->
   <header class="top-bar">
-    <!-- شاشة قفل الأمان للدخول للوحة التحكم -->
+<!-- شاشة قفل الأمان للدخول للوحة التحكم -->
   <div id="adminAuthLockScreen" style="position:fixed; inset:0; background:#071914; z-index:999999; display:flex; align-items:center; justify-content:center; padding:15px;">
     <div style="background:#0a221c; border:1px solid #d4af37; border-radius:12px; padding:32px 24px; width:min(380px, 92vw); text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.85);">
       <div style="font-size:42px; margin-bottom:12px;">🔒</div>
-      <h2 style="color:#d4af37; font-size:18px; font-weight:900; margin-bottom:6px;">منطقة المشرفين فقط</h2>
-      <p style="color:#8da49c; font-size:11.5px; margin-bottom:20px; line-height:1.6;">لوحة تحكم عطور سراقة محمية. يرجى إدخال كلمة المرور للمتابعة.</p>
+      <h2 style="color:#d4af37; font-size:18px; font-weight:900; margin-bottom:6px;">تسجيل دخول المشرف</h2>
+      <p style="color:#8da49c; font-size:11.5px; margin-bottom:20px; line-height:1.6;">لوحة الإدارة مؤمنة بحساب Firebase الرسمي.</p>
       
-      <form id="adminLoginForm" onsubmit="event.preventDefault(); submitAdminLogin();">
-        <input type="password" id="adminLoginInput" placeholder="أدخل كلمة المرور..." autocomplete="current-password" required style="width:100%; box-sizing:border-box; background:#071914; border:1px solid rgba(212,175,55,0.3); color:#fff; padding:12px; border-radius:6px; font-size:13px; text-align:center; outline:none; margin-bottom:14px;">
-        <button type="submit" style="width:100%; background:linear-gradient(135deg, #d4af37, #b8972e); color:#071914; font-weight:800; border:none; padding:12px; border-radius:6px; font-size:13px; cursor:pointer;">تسجيل الدخول للوحة التحكم</button>
+      <form id="adminLoginForm">
+        <input type="email" id="adminEmailInput" placeholder="البريد الإلكتروني..." required style="width:100%; box-sizing:border-box; background:#071914; border:1px solid rgba(212,175,55,0.3); color:#fff; padding:12px; border-radius:6px; font-size:13px; text-align:center; outline:none; margin-bottom:10px;">
+        <input type="password" id="adminLoginInput" placeholder="كلمة المرور..." autocomplete="current-password" required style="width:100%; box-sizing:border-box; background:#071914; border:1px solid rgba(212,175,55,0.3); color:#fff; padding:12px; border-radius:6px; font-size:13px; text-align:center; outline:none; margin-bottom:14px;">
+        <button type="submit" id="adminLoginSubmitBtn" style="width:100%; background:linear-gradient(135deg, #d4af37, #b8972e); color:#071914; font-weight:800; border:none; padding:12px; border-radius:6px; font-size:13px; cursor:pointer;">دخول آمن للوحة التحكم</button>
         <a href="index.html" style="display:block; color:#8da49c; font-size:11px; margin-top:14px; text-decoration:none;">➔ العودة لمتجر سراقة</a>
       </form>
     </div>
@@ -468,7 +469,7 @@ input, select, textarea {
     </div>
 
     <div class="actions-side">
-      <a href="index.html" class="btn-exit">خروج للمتجر ➔</a>
+<a href="index.html" class="btn-exit" id="adminLogoutBtn">خروج للمتجر ➔</a>      
       <button class="menu-trigger-btn" id="menuBtn" title="القائمة الشاملة">☰</button>
 
       <!-- القائمة المنسدلة للثلاث شرط -->
@@ -878,33 +879,28 @@ input, select, textarea {
     </section>
 <!-- 7. قسم إعدادات المتجر، الأمان، الشريط الإعلاني، وإدارة الكوبونات -->
     <section id="settingsSec" class="section-view">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <h2 style="font-size: 20px; color: var(--gold); font-weight: 900;">⚙️ تخصيص العروض والإعدادات والأمان</h2>
-        <button class="stock-btn" style="width:auto; padding:6px 14px; font-size:11.5px;" onclick="openSection('inventorySec')">➔ العودة لإدارة العطور</button>
+        <button type="button" class="stock-btn" style="width:auto; padding:6px 14px; font-size:11.5px;" onclick="openSection('inventorySec')">➔ العودة لإدارة العطور</button>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;">
+      <!-- شبكة القسم العلوي: كارت الواتساب + كارت الشريط الإعلاني بجانب بعضهما -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 24px;">
         
-        <!-- كارت إعدادات الأمان ورقم الواتساب -->
+        <!-- كارت إعدادات التواصل والواتساب -->
         <div class="panel" style="margin-bottom: 0;">
           <div class="panel-title">
-            <span>🛡️ إعدادات المتجر والأمان</span>
+            <span>📱 إعدادات التواصل واستقبال الطلبات</span>
           </div>
 
           <form id="storeSecurityForm">
             <div class="form-group" style="margin-bottom: 14px;">
               <label>رقم واتساب استقبال الطلبات 📱</label>
               <input type="tel" id="cfgAdminWhatsapp" placeholder="مثال: 201016118242" required>
-              <small style="font-size: 10px; color: var(--text-muted);">الرقم الذي تُرسل إليه فواتير وبيانات الطلبات تلقائياً مع كود الدولة (20).</small>
+              <small style="font-size: 10px; color: var(--text-muted); display: block; margin-top: 4px;">الرقم الذي تُرسل إليه فواتير وبيانات الطلبات تلقائياً مع كود الدولة (20).</small>
             </div>
 
-            <div class="form-group" style="margin-bottom: 14px;">
-              <label>كلمة مرور لوحة التحكم (Admin Password) 🔒</label>
-              <input type="text" id="cfgAdminPassword" placeholder="أدخل كلمة مرور قوية" required>
-              <small style="font-size: 10px; color: var(--text-muted);">محمية سحابياً في Firebase ولن تظهر في كود المتجر للزوار.</small>
-            </div>
-
-            <button type="submit" class="btn-submit" id="saveSecurityBtn" style="width: 100%; margin-top: 10px; background: #27ae60; color: #fff;">💾 حفظ وتحديث الأمان والواتساب</button>
+            <button type="submit" class="btn-submit" id="saveSecurityBtn" style="width: 100%; margin-top: 10px; background: #27ae60; color: #fff;">💾 حفظ وتحديث رقم الواتساب</button>
           </form>
         </div>
 
@@ -934,64 +930,58 @@ input, select, textarea {
           </form>
         </div>
 
-        <!-- كارت إدارة كوبونات الخصم والبروموكود -->
-        <div class="panel" style="margin-bottom: 0; grid-column: 1 / -1;">
-          <div class="panel-title">
-            <span>🎟️ إدارة كوبونات الخصم والبروموكود</span>
-          </div>
+      </div>
 
-          <form id="createCouponForm">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
-              <div class="form-group">
-                <label>كود الكوبون (باللغة الإنجليزية)*</label>
-                <input type="text" id="cpnCode" placeholder="مثال: SURAQA10" style="text-transform: uppercase;" required>
-              </div>
-
-              <div class="form-group">
-                <label>نوع الخصم*</label>
-                <select id="cpnType">
-                  <option value="percent">نسبة مئوية (%)</option>
-                  <option value="fixed">مبلغ ثابت (جنيه)</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>قيمة الخصم*</label>
-                <input type="number" id="cpnValue" placeholder="مثال: 10 أو 100" min="1" required>
-              </div>
-
-              <div class="form-group">
-                <label>تفعيل الكوبون</label>
-                <select id="cpnStatus">
-                  <option value="active">مفعل ويعمل</option>
-                  <option value="disabled">معطل مؤقتاً</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="btn-submit" id="saveCouponBtn" style="width: 100%; margin-top: 12px; background: #d4af37; color: #071914; font-weight:900;">
-              ➕ إضافة الكوبون وتفعيله بالمتجر
-            </button>
-          </form>
-
-          <!-- جدول الكوبونات المسجلة -->
-          <div class="table-wrap" style="margin-top: 18px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>كود الخصم</th>
-                  <th>قيمة الخصم</th>
-                  <th>الحالة</th>
-                  <th>إجراء</th>
-                </tr>
-              </thead>
-              <tbody id="couponsTableBody">
-                <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">جاري جلب الكوبونات...</td></tr>
-              </tbody>
-            </table>
-          </div>
+      <!-- كارت إدارة الكوبونات بعرض الشاشة الكامل في الأسفل -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>🎟️ إضافة كوبون خصم جديد للمتجر</span>
         </div>
 
+        <form id="createCouponForm">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 15px;">
+            <div class="form-group">
+              <label>كود الكوبون (مثال: SURAQA10)*</label>
+              <input type="text" id="cpnCode" placeholder="كود الكوبون" style="text-transform: uppercase;" required>
+            </div>
+
+            <div class="form-group">
+              <label>نسبة الخصم % (مثال: 10)*</label>
+              <input type="number" id="cpnValue" placeholder="نسبة الخصم %" min="1" max="100" required>
+            </div>
+
+            <div class="form-group">
+              <label>عدد الاستخدامات (فاضي = غير محدود)</label>
+              <input type="number" id="cpnMaxUses" placeholder="فاضي = غير محدود" min="1">
+            </div>
+
+            <div class="form-group">
+              <label>تاريخ ووقت الانتهاء (اختياري) ⏳</label>
+              <input type="datetime-local" id="cpnExpiry">
+            </div>
+          </div>
+
+          <!-- خيار تطبيق الكوبون على كل المنتجات -->
+          <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 12px;">
+            <input type="checkbox" id="cpnApplyAll" checked style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--gold);">
+            <label for="cpnApplyAll" style="font-size: 13px; font-weight: 800; cursor: pointer; color: var(--text-light); margin: 0;">ينطبق على كل منتجات المتجر</label>
+          </div>
+
+          <!-- قائمة اختيار العطور المحددة -->
+          <div id="cpnProductsPickerBox" style="display: none; background: rgba(7, 25, 20, 0.85); border: 1px solid var(--line); border-radius: 8px; padding: 12px; max-height: 200px; overflow-y: auto; margin-bottom: 15px;">
+            <div id="cpnProductsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="saveCouponBtn" style="width: 100%; padding: 12px; font-size: 13px; background: linear-gradient(135deg, #d4af37, #b8972e); color: #071914; font-weight: 900; border-radius: 6px;">
+            + تفعيل وحفظ الكوبون
+          </button>
+        </form>
+
+        <!-- قائمة كروت الكوبونات المنشأة -->
+        <div style="margin-top: 25px; border-top: 1px solid var(--line); padding-top: 15px;">
+          <label style="font-size: 12px; color: var(--gold); font-weight: 800; display: block; margin-bottom: 10px;">الكوبونات الفعالة حالياً:</label>
+          <div id="couponsCardsList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+        </div>
       </div>
     </section>
   
@@ -1026,6 +1016,7 @@ input, select, textarea {
 
   <!-- فايربيز والمنطق البرمجي -->
   <script type="module">
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getFirestore, collection, onSnapshot, doc, updateDoc, 
@@ -1044,6 +1035,7 @@ input, select, textarea {
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
     const ordersCol = collection(db, "orders");
     const perfumesCol = collection(db, "perfumes");
     const settingsDoc = doc(db, "settings", "storeConfig");
@@ -1149,6 +1141,7 @@ document.getElementById("pFileInput")?.addEventListener("change", async (e) => {
       if (countEl) countEl.textContent = allPerfumes.length;
       renderStockGrid();
       renderAnalytics();
+      populateCouponProductsChecklist();
     });
 
 // حساب وعرض إجمالي الزجاجات فورياً
@@ -2376,15 +2369,53 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
       }
     });
 
-    /* =========================================================
-       إدارة وحفظ كوبونات الخصم (Promo Codes)
+/* =========================================================
+       إدارة كوبونات الخصم المتقدمة لسراقة
        ========================================================= */
+    const cpnApplyAll = document.getElementById("cpnApplyAll");
+    const cpnPickerBox = document.getElementById("cpnProductsPickerBox");
+    const cpnProductsList = document.getElementById("cpnProductsList");
+
+    cpnApplyAll?.addEventListener("change", (e) => {
+      if (cpnPickerBox) {
+        cpnPickerBox.style.display = e.target.checked ? "none" : "block";
+      }
+    });
+
+    function populateCouponProductsChecklist() {
+      if (!cpnProductsList) return;
+      if (allPerfumes.length === 0) {
+        cpnProductsList.innerHTML = `<span style="font-size:11px; color:var(--text-muted);">لا توجد عطور مضافة بعد.</span>`;
+        return;
+      }
+
+      cpnProductsList.innerHTML = allPerfumes.map(p => `
+        <label style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 7px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+          <span style="color: var(--text-light);">${p.name}</span>
+          <input type="checkbox" class="cpn-product-item" value="${p.id}" style="width: 16px; height: 16px; accent-color: var(--gold); cursor: pointer;">
+        </label>
+      `).join("");
+    }
+
     document.getElementById("createCouponForm")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const code = document.getElementById("cpnCode").value.trim().toUpperCase();
-      const type = document.getElementById("cpnType").value;
-      const val = Number(document.getElementById("cpnValue").value);
-      const active = document.getElementById("cpnStatus").value === "active";
+      const value = Number(document.getElementById("cpnValue").value);
+      const maxUsesRaw = document.getElementById("cpnMaxUses").value.trim();
+      const maxUses = maxUsesRaw !== "" ? Number(maxUsesRaw) : null;
+      const expiryDate = document.getElementById("cpnExpiry").value || null;
+      const applyAll = document.getElementById("cpnApplyAll").checked;
+
+      let targetProductIds = [];
+      if (!applyAll) {
+        document.querySelectorAll(".cpn-product-item:checked").forEach(cb => {
+          targetProductIds.push(cb.value);
+        });
+        if (targetProductIds.length === 0) {
+          alert("يرجى اختيار عطر واحد على الأقل أو تفعيل خيار (ينطبق على كل منتجات المتجر)!");
+          return;
+        }
+      }
 
       const btn = document.getElementById("saveCouponBtn");
       btn.disabled = true;
@@ -2392,13 +2423,21 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
       try {
         await setDoc(doc(db, "coupons", code), {
           code: code,
-          type: type,
-          value: val,
-          active: active,
+          type: "percent",
+          value: value,
+          maxUses: maxUses,
+          expiryDate: expiryDate,
+          usedCount: 0,
+          applyAll: applyAll,
+          targetProducts: targetProductIds,
+          active: true,
           createdAt: new Date()
         });
+
         toast(`تم تفعيل كوبون الخصم [${code}] بنجاح! 🎟️`);
         e.target.reset();
+        document.getElementById("cpnApplyAll").checked = true;
+        if (cpnPickerBox) cpnPickerBox.style.display = "none";
       } catch (err) {
         toast("حدث خطأ أثناء حفظ الكوبون!");
       } finally {
@@ -2407,34 +2446,125 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
     });
 
     onSnapshot(couponsCol, (snap) => {
-      const tbody = document.getElementById("couponsTableBody");
-      if (!tbody) return;
+      const container = document.getElementById("couponsCardsList");
+      if (!container) return;
 
       const list = [];
-      snap.forEach(d => list.push(d.data()));
+      snap.forEach(d => list.push({ id: d.id, ...d.data() }));
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">لا توجد كوبونات خصم مضافة بعد.</td></tr>`;
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:15px;">لا توجد كوبونات خصم منشأة حالياً.</div>`;
         return;
       }
 
-      tbody.innerHTML = list.map(c => `
-        <tr>
-          <td><strong style="color:var(--gold); letter-spacing:1px;">${c.code}</strong></td>
-          <td>${c.type === 'percent' ? `${c.value}% خصم مئوي` : `${c.value} ج.م خصم ثابت`}</td>
-          <td><span style="color:${c.active ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${c.active ? 'مفعل' : 'معطل'}</span></td>
-          <td>
-            <button type="button" class="btn-card-delete" onclick="deleteCoupon('${c.code}')" title="حذف الكوبون">✕</button>
-          </td>
-        </tr>
-      `).join("");
+      container.innerHTML = list.map(c => {
+        const remainingUses = c.maxUses !== null ? (c.maxUses - (c.usedCount || 0)) : null;
+        const isExhausted = remainingUses !== null && remainingUses <= 0;
+        const isExpired = c.expiryDate && (Date.now() > new Date(c.expiryDate).getTime());
+
+        let scopeText = c.applyAll ? "كل العطور" : `${(c.targetProducts || []).length} عطور محددة`;
+
+        let statusHtml = "";
+        if (isExpired) {
+          statusHtml = `<span style="color: #ef4444; font-weight: 800;">منتهي الصلاحية ⏳</span>`;
+        } else if (c.maxUses === null) {
+          statusHtml = `<span style="color: #4ade80; font-weight: 800;">غير محدود</span>`;
+        } else if (isExhausted) {
+          statusHtml = `<span style="color: #ef4444; font-weight: 800;">نفدت الاستخدامات (0 من ${c.maxUses})</span>`;
+        } else {
+          statusHtml = `<span style="color: #0284c7; font-weight: 800;">باقي ${remainingUses} من ${c.maxUses}</span>`;
+        }
+
+        return `
+          <div style="background: rgba(7, 25, 20, 0.9); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" onclick="deleteCoupon('${c.code}')" style="background:none; border:none; color:#ef4444; font-size:16px; cursor:pointer; padding:4px;" title="حذف الكوبون">
+              🗑️
+            </button>
+            <div style="font-size: 13px; text-align: left; direction: ltr; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <strong style="color: var(--text-light); font-size: 14px;">${c.code}</strong>
+              <span style="color: var(--text-muted);">(خصم ${c.value}%)</span>
+              <span style="color: var(--line);">—</span>
+              ${statusHtml}
+              <span style="color: var(--line);">—</span>
+              <span style="color: var(--text-muted); direction: rtl;">${scopeText}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
     });
 
     window.deleteCoupon = async function(code) {
-      if (!confirm(`هل تريد حذف الكوبون [${code}] نهائياً من المتجر؟`)) return;
+      if (!confirm(`هل تريد حذف الكوبون [${code}] نهائياً؟`)) return;
       await deleteDoc(doc(db, "coupons", code));
-      toast(`تم إيقاف وحذف الكوبون [${code}]!`);
+      toast(`تم حذف الكوبون [${code}]!`);
     };
+
+    /* =========================================================
+       نظام حماية لوحة تحكم سراقة عبر Firebase Auth الرسمي
+       ========================================================= */
+    const lockEl = document.getElementById("adminAuthLockScreen");
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (lockEl) lockEl.style.display = "none";
+      } else {
+        if (lockEl) lockEl.style.display = "flex";
+      }
+    });
+
+    document.getElementById("adminLoginForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("adminEmailInput")?.value.trim();
+      const pass = document.getElementById("adminLoginInput")?.value.trim();
+      const btn = document.getElementById("adminLoginSubmitBtn");
+
+      if (!email || !pass) return;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "جاري التحقق...";
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        toast("أهلاً بك في لوحة تحكم سراقة! 💎");
+      } catch (err) {
+        alert("البريد الإلكتروني أو كلمة المرور غير صحيحة!");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "دخول آمن للوحة التحكم";
+        }
+      }
+    });
+
+    // تسجيل الخروج عبر الزر المحدد فقط
+    document.getElementById("adminLogoutBtn")?.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    // حفظ رقم الواتساب بدون تضارب
+    document.getElementById("storeSecurityForm")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("saveSecurityBtn");
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "جاري الحفظ...";
+      }
+
+      try {
+        await setDoc(settingsDoc, {
+          whatsappNumber: document.getElementById("cfgAdminWhatsapp").value.trim()
+        }, { merge: true });
+        toast("تم تحديث رقم واتساب استقبال الطلبات بنجاح! 📱");
+      } catch (err) {
+        toast("حدث خطأ أثناء حفظ الرقم!");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "💾 حفظ وتحديث رقم الواتساب";
+        }
+      }
+    });
   </script>
 </body>
 </html>
