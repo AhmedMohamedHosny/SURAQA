@@ -508,25 +508,6 @@ input, select, textarea {
 
   <main class="container">
 
-    <!-- كروت إحصائيات المبيعات والأرقام الحية -->
-    <section class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-label">إجمالي المبيعات التحصيلية</div>
-        <div class="kpi-value" id="kpiTotalRevenue">0 ج</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">عدد الطلبات المسجلة</div>
-        <div class="kpi-value green" id="kpiTotalOrders">0</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">طلبات جديدة بالانتظار</div>
-        <div class="kpi-value red" id="kpiNewOrders">0</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">العطور المتوفرة بالتشكيلة</div>
-        <div class="kpi-value" id="kpiPerfumesCount">0</div>
-      </div>
-    </section>
 
     <!-- 1. القسم الافتراضي النشط دائماً: إدارة العطور والمخزون -->
     <section id="inventorySec" class="section-view active">
@@ -657,8 +638,33 @@ input, select, textarea {
       </div>
     </section>
 
-    <!-- 2. قسم إدارة الطلبات -->
+<!-- 2. قسم إدارة الطلبات -->
     <section id="ordersSec" class="section-view">
+
+      <!-- كروت إحصائيات المبيعات الخاصة بقسم الطلبات -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">إجمالي المبيعات التحصيلية</div>
+          <div class="kpi-value" id="kpiTotalRevenue">0 ج</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">عدد الطلبات المسجلة</div>
+          <div class="kpi-value green" id="kpiTotalOrders">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">طلبات جديدة بالانتظار</div>
+          <div class="kpi-value red" id="kpiNewOrders">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">العطور المتوفرة بالتشكيلة</div>
+          <div class="kpi-value" id="kpiPerfumesCount">0</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>سجل الطلبات الواردة من الموقع</span>
+      
       <div class="panel">
 <div class="panel-title">
           <span>سجل الطلبات الواردة من الموقع</span>
