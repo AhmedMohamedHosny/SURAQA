@@ -413,7 +413,52 @@
       <span class="lightbox-close">&times;</span>
       <img id="lightboxImg" src="" alt="رأي العميل">
     </div>
+    <!-- =========================================================
+         صفحة خدمة العملاء الكاملة (Customer Service Page)
+         ========================================================= -->
+    <div class="cs-full-page" id="customerServicePage" style="display: none;">
+      <div class="pfp-top-nav">
+        <button type="button" class="pfp-back-btn" id="closeCsPageBtn">
+          <span>➔</span>
+          <span>العودة للمتجر</span>
+        </button>
+        <div class="pfp-brand-mini">
+          <img src="image/logo.png" alt="سُـراقَـة" style="height: 28px;">
+          <span>SURAQA</span>
+        </div>
+      </div>
 
+      <div class="cs-page-container">
+        <div class="cs-tabs-row" id="csTabsRow">
+          <button type="button" class="cs-tab-btn active" data-cstab="shipping">الشحن والتوصيل</button>
+          <button type="button" class="cs-tab-btn" data-cstab="returns">الاسترجاع</button>
+          <button type="button" class="cs-tab-btn" data-cstab="faq">الأسئلة الشائعة</button>
+          <button type="button" class="cs-tab-btn" data-cstab="contact">تواصل معنا</button>
+        </div>
+
+        <div class="cs-tab-panel active" data-cspanel="shipping">
+          <h2 class="cs-panel-title">الشحن والتوصيل</h2>
+          <p class="cs-panel-text" id="csShippingText">جاري تحميل المحتوى...</p>
+        </div>
+
+        <div class="cs-tab-panel" data-cspanel="returns">
+          <h2 class="cs-panel-title">سياسة الاسترجاع</h2>
+          <p class="cs-panel-text" id="csReturnsText">جاري تحميل المحتوى...</p>
+        </div>
+
+        <div class="cs-tab-panel" data-cspanel="faq">
+          <h2 class="cs-panel-title">الأسئلة الشائعة</h2>
+          <div id="csFaqList"></div>
+        </div>
+
+        <div class="cs-tab-panel" data-cspanel="contact">
+          <h2 class="cs-panel-title">تواصل معنا</h2>
+          <p class="cs-panel-text" id="csContactText">جاري تحميل المحتوى...</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
   </main>
 
   <!-- FOOTER -->
@@ -436,10 +481,10 @@
 
       <div class="footer-column">
         <h4 data-ar="خدمة العملاء" data-en="Customer Care">خدمة العملاء</h4>
-        <a href="#" data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</a>
-        <a href="#" data-ar="الاسترجاع" data-en="Returns">الاسترجاع</a>
-        <a href="#" data-ar="الأسئلة الشائعة" data-en="FAQ">الأسئلة الشائعة</a>
-        <a href="#" data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</a>
+        <a href="#" class="cs-page-link" data-cstab="shipping" data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</a>
+        <a href="#" class="cs-page-link" data-cstab="returns" data-ar="الاسترجاع" data-en="Returns">الاسترجاع</a>
+        <a href="#" class="cs-page-link" data-cstab="faq" data-ar="الأسئلة الشائعة" data-en="FAQ">الأسئلة الشائعة</a>
+        <a href="#" class="cs-page-link" data-cstab="contact" data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</a>
       </div>
 
       <div class="footer-column">
