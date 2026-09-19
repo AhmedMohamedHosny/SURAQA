@@ -1554,13 +1554,61 @@ function renderOrdersTable() {
         `;
       }).join("");
     }
-    window.viewOrderInvoice = function(id) {
+window.viewOrderInvoice = function(id) {
       const o = allOrders.find(x => x.id === id);
       if (!o) return;
+
       const msgBox = document.getElementById("invoiceMessageText");
-      if (msgBox) {
-        msgBox.textContent = o.whatsappMessage || "لا تتوفر نسخة كاملة من الفاتورة لهذا الطلب (تم إنشاؤه قبل تفعيل هذه الميزة).";
+      if (!msgBox) return;
+
+      // 1. إذا كان نص الفاتورة مخزناً مسبقاً
+      if (o.whatsappMessage) {
+        msgBox.textContent = o.whatsappMessage;
+      } else {
+        // 2. توليد نص فاتورة الواتساب تلقائياً وبأعلى دقة من بيانات الطلب
+        let itemsListText = "";
+        if (Array.isArray(o.items) && o.items.length > 0) {
+          itemsListText = o.items.map(i => `• ${i.name || "عطر"} (${i.size || "50مل"}) × ${i.quantity || 1} — بسعر ${(Number(i.price || 0) * Number(i.quantity || 1))} ج`).join("\n");
+        } else if (typeof o.items === "string") {
+          itemsListText = `• ${o.items}`;
+        } else {
+          itemsListText = "• لم يتم تحديد تفاصيل الأصناف";
+        }
+
+        const customerName = o.customer?.name || o.name || "بدون اسم";
+        const phone = o.customer?.phone || o.phone || "—";
+        const altPhone = o.customer?.secondaryPhone || o.secondaryPhone || "لا يوجد";
+        const gov = o.customer?.governorate || o.gov || "—";
+        const address = o.customer?.address || o.address || "—";
+        const payMethod = o.paymentMethod === "cod" ? "الدفع عند الاستلام كاش 💵" : "تحويل محفظة إلكترونية 📱";
+        const subtotal = Number(o.pricing?.subtotal || o.subtotal || 0);
+        const shipping = Number(o.pricing?.shippingFee || o.shippingFee || 0);
+        const total = Number(o.pricing?.total || o.total || 0);
+
+        const generatedInvoice = `🧾 *فاتورة طلب شراء جديدة — عطور سراقة* 💎
+━━━━━━━━━━━━━━━━━━
+👤 *بيانات العميل الشاحن:*
+• الاسم: ${customerName}
+• الهاتف الأساسي: ${phone}
+• الهاتف البديل: ${altPhone}
+• المحافظة: ${gov}
+• العنوان التفصيلي: ${address}
+
+📦 *المنتجات المطلوبة:*
+${itemsListText}
+
+━━━━━━━━━━━━━━━━━━
+💰 *الحساب والتكاليف:*
+• المجموع الفرعي: ${subtotal} جنيه
+• مصاريف الشحن والتوصيل: ${shipping} جنيه
+• *المبلغ الإجمالي المطلوب تحصيله:* *${total} جنيه*
+• طريقة السداد: ${payMethod}
+━━━━━━━━━━━━━━━━━━
+📍 تم استلام وتأكيد الطلب عبر متجر سراقة الإلكتروني.`;
+
+        msgBox.textContent = generatedInvoice;
       }
+
       document.getElementById("invoiceModal")?.classList.add("open");
     };
 
