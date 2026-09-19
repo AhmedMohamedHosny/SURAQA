@@ -911,15 +911,10 @@ function openProductFullPage(id) {
   if (pfpImage) { pfpImage.src = prod.image || "image/S1.png"; pfpImage.alt = productName(prod); }
   if (pfpCategory) pfpCategory.textContent = productCategoryLabel(prod);
   if (pfpName) pfpName.textContent = productName(prod);
-const avgRating = Number(prod.rating || 5.0).toFixed(1);
-  const totalRev = Number(prod.reviews || 1);
-  if (pfpRating) pfpRating.textContent = `★ ${avgRating}`;
-  if (pfpReviews) pfpReviews.textContent = `(${totalRev} تقييم)`;
+
 
   // تشغيل عداد "يشاهد الآن" الحي المتغير
 trackRealTimeViewers(prod.id);
-  // تهيئة نجوم تقييم العميل
-  setupRatingInteraction(prod);
  
   if (pfpDesc) pfpDesc.textContent = productDescription(prod) || "";
   if (pfpQtyVal) pfpQtyVal.textContent = "1";
@@ -2062,65 +2057,7 @@ window.addEventListener("beforeunload", () => {
   cleanupRealTimeViewers();
 });
 
-function setupRatingInteraction(prod) {
-  const userRateBox = document.querySelector(".user-rate-action");
-  const starsContainer = document.getElementById("starRatingWidget");
-  const statusMsg = document.getElementById("rateStatusMsg");
-  const pfpRatingEl = document.getElementById("pfpRating");
-  const pfpRevEl = document.getElementById("pfpReviews");
 
-  if (!starsContainer || !userRateBox) return;
-
-  const storageKey = `rated_perfume_${prod.id}`;
-  const alreadyRated = localStorage.getItem(storageKey);
-
-  // إذا كان العميل قيّم هذا العطر مسبقاً، نخفي قسم إدخال التقييم تماماً
-  if (alreadyRated) {
-    userRateBox.style.display = "none";
-    return;
-  } else {
-    userRateBox.style.display = "inline-flex";
-    if (statusMsg) statusMsg.textContent = "";
-  }
-
-  starsContainer.querySelectorAll(".star-btn").forEach(star => {
-    star.onclick = async () => {
-      if (localStorage.getItem(storageKey)) return;
-
-      const userScore = Number(star.dataset.star);
-      localStorage.setItem(storageKey, userScore);
-
-      // الحساب التناسبي الصحيح للتقييم المتوسط
-      const oldAvg = Number(prod.rating || 5.0);
-      const oldReviews = Number(prod.reviews || 0);
-
-      const newReviews = oldReviews + 1;
-      const newAvg = Number((((oldAvg * oldReviews) + userScore) / newReviews).toFixed(1));
-
-      // تحديث فوري بالواجهة
-      prod.rating = newAvg;
-      prod.reviews = newReviews;
-
-      if (pfpRatingEl) pfpRatingEl.textContent = `★ ${newAvg.toFixed(1)}`;
-      if (pfpRevEl) pfpRevEl.textContent = `(${newReviews} تقييم)`;
-
-      // إخفاء صندوق التقييم فوراً بعد التقييم
-      userRateBox.style.display = "none";
-      showToast("شكراً لتقييمك! ⭐", `تم تسجيل تقييمك (${userScore} نجوم) بنجاح.`);
-
-      // مزامنة التقييم في قاعدة بيانات فايربيز
-      try {
-        const perfumeDocRef = doc(db, "perfumes", String(prod.id));
-        await updateDoc(perfumeDocRef, {
-          rating: newAvg,
-          reviews: newReviews
-        });
-      } catch (err) {
-        console.warn("Could not sync rating to Firestore:", err);
-      }
-    };
-  });
-}
 document.getElementById("copyDepositVodafoneBtn")?.addEventListener("click", () => {
   const num = document.getElementById("depositVodafoneNum")?.textContent || "01016118242";
   navigator.clipboard.writeText(num).then(() => {
