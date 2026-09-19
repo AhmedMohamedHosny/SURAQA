@@ -235,7 +235,18 @@ input, select, textarea {
     .btn-submit:hover { background: var(--gold-hover); }
 
     /* الجداول */
-    .table-wrap { overflow-x: auto; }
+.table-wrap { 
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+    }
+    table { 
+      width: 100%; 
+      min-width: 650px; /* لضمان التمرير الأفقي بدلاً من انضغاط الحقول */
+      border-collapse: collapse; 
+      font-size: 12px; 
+      text-align: right; 
+    }    
     table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: right; }
     th { background: rgba(0,0,0,0.25); color: var(--gold); padding: 12px 10px; border-bottom: 1px solid var(--line); }
     td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -663,21 +674,17 @@ input, select, textarea {
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-title">
+<div class="panel">
+        <div class="panel-title" style="flex-wrap: wrap; gap: 10px;">
           <span>سجل الطلبات الواردة من الموقع</span>
-      
-      <div class="panel">
-<div class="panel-title">
-          <span>سجل الطلبات الواردة من الموقع</span>
-          <div style="display:flex; gap:8px; align-items:center;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap: wrap;">
             <button type="button" class="btn-submit" id="exportExcelBtn" style="margin:0; padding:6px 14px; font-size:11px; background:#217346; color:#fff;">
               📊 تصدير شيت Excel
             </button>
             <button type="button" class="btn-exit" id="clearAllOrdersBtn" style="margin:0; padding:6px 14px; font-size:11px; background:#b91c1c;">
               🗑️ تصفير وحذف جميع الطلبيات
             </button>
-            <button class="stock-btn" style="width:auto; padding:4px 10px; font-size:11px;" onclick="openSection('inventorySec')">➔ العودة لإدارة العطور</button>
+            <button type="button" class="stock-btn" style="width:auto; padding:4px 10px; font-size:11px;" onclick="openSection('inventorySec')">➔ العودة لإدارة العطور</button>
           </div>
         </div>
         
@@ -1491,42 +1498,56 @@ const base = Number(p.price || 0);
         if (s100) s100.value = Math.round((base * 1.7) / 10) * 10;
       }
     });
-    function renderOrdersTable() {
+function renderOrdersTable() {
       const tbody = document.getElementById("ordersTableBody");
       if (!tbody) return;
 
       if (allOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">لا توجد طلبات مسجلة.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">لا توجد طلبات مسجلة بعد.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = allOrders.map(o => {
-        const itemsText = (o.items || []).map(i => `${escapeHtml(i.name)} × ${escapeHtml(i.quantity)}`).join("<br>");        
-        const phone = o.customer?.phone || "";
-        const waLink = `https://wa.me/20${phone.startsWith("0") ? phone.slice(1) : phone}?text=${encodeURIComponent(`أهلاً بك، بخصوص طلبك من عطور سراقة بقيمة ${o.pricing?.total} ج`)}`;
+        let itemsText = "—";
+        if (Array.isArray(o.items) && o.items.length > 0) {
+          itemsText = o.items.map(i => `${escapeHtml(i.name || "عطر")} (${escapeHtml(i.size || "50مل")}) × ${escapeHtml(i.quantity || 1)}`).join("<br>");
+        } else if (typeof o.items === "string") {
+          itemsText = escapeHtml(o.items);
+        }
+
+        const phone = o.customer?.phone || o.phone || "";
+        const cleanPhone = String(phone).replace(/\D/g, "");
+        const waPhone = cleanPhone.startsWith("0") ? cleanPhone.slice(1) : cleanPhone;
+        const total = Number(o.pricing?.total || o.total || 0);
+        const waLink = `https://wa.me/20${waPhone}?text=${encodeURIComponent(`أهلاً بك، بخصوص طلبك من عطور سراقة بقيمة ${total} ج`)}`;
+
+        const gov = o.customer?.governorate || o.gov || "";
+        const addr = o.customer?.address || o.address || "";
+        const pay = o.paymentMethod === "online" || o.paymentMethod === "wallet" ? "إلكتروني" : "عند الاستلام";
+        const isDone = o.status === "delivered";
 
         return `
           <tr>
             <td>
-              <strong>${escapeHtml(o.customer?.name || "بدون اسم")}</strong>
+              <strong>${escapeHtml(o.customer?.name || o.name || "بدون اسم")}</strong>
               <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
-                <button type="button" class="btn-action-copy" onclick="copyShippingLabel('${o.id}')">📋 نسخ بوليصة الشحن</button>
-                <button type="button" class="btn-action-copy" onclick="viewOrderInvoice('${o.id}')">🧾 عرض الفاتورة كاملة</button>
+                <button type="button" class="btn-action-copy" onclick="copyShippingLabel('${o.id}')">📋 بوليصة الشحن</button>
+                <button type="button" class="btn-action-copy" onclick="viewOrderInvoice('${o.id}')">🧾 عرض الفاتورة</button>
               </div>
             </td>
             <td>
               <a href="tel:${phone}" style="color:var(--gold); text-decoration:none; display:block; margin-bottom:4px;">${phone}</a>
               <a href="${waLink}" target="_blank" class="btn-action-wa">💬 واتساب</a>
             </td>
-            <td>${escapeHtml(o.customer?.governorate || "")}<br><span style="font-size:10px; color:var(--text-muted);">${escapeHtml(o.customer?.address || "")}</span></td>            
+            <td>${escapeHtml(gov)}<br><span style="font-size:10px; color:var(--text-muted);">${escapeHtml(addr)}</span></td>            
             <td style="font-size:11px;">${itemsText}</td>
-            <td>${o.paymentMethod === "cod" ? "عند الاستلام" : "إلكتروني"}</td>
-            <td><strong style="color:var(--gold);">${(o.pricing?.total || 0).toLocaleString("ar-EG")} ج</strong></td>
-            <td><span style="color:${o.status === 'delivered' ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${o.status === 'delivered' ? 'تم التسليم' : 'جديد'}</span></td>
-<td>
+            <td>${pay}</td>
+            <td><strong style="color:var(--gold);">${total.toLocaleString("ar-EG")} ج</strong></td>
+            <td><span style="color:${isDone ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${isDone ? 'تم التسليم' : 'جديد'}</span></td>
+            <td>
               <div style="display:flex; align-items:center; gap:6px;">
-                ${o.status !== 'delivered' ? `<button class="stock-btn" style="width:auto; padding:3px 8px; font-size:10px;" onclick="markDelivered('${o.id}')">✓ تأكيد</button>` : '<span style="font-size:11px; color:var(--success);">مكتمل</span>'}
-                <button type="button" class="btn-card-delete" onclick="deleteSingleOrder('${o.id}')" title="حذف هذه الطلبية">✕</button>
+                ${!isDone ? `<button class="stock-btn" style="width:auto; padding:3px 8px; font-size:10px;" onclick="markDelivered('${o.id}')">✓ تأكيد</button>` : '<span style="font-size:11px; color:var(--success);">مكتمل</span>'}
+                <button type="button" class="btn-card-delete" onclick="deleteSingleOrder('${o.id}')" title="حذف">✕</button>
               </div>
             </td>
           </tr>
