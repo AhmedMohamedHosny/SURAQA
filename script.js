@@ -1479,7 +1479,8 @@ const orderItems = cart.map(item => {
   };
 
   try {
-    await addDoc(ordersCol, orderData);
+    const orderDocRef = await addDoc(ordersCol, orderData);
+   
 if (activeCoupon && activeCoupon.code) {
       try {
         const couponDocRef = doc(db, "coupons", activeCoupon.code);
@@ -1544,6 +1545,12 @@ ${shippingNoteWa}
 ${receiptMessageText}
 --------------------------------
 ✨ تم تسجيل الطلب بنجاح عبر الموقع`;
+
+    try {
+      await updateDoc(orderDocRef, { whatsappMessage: waMessage });
+    } catch (msgErr) {
+      console.warn("Could not save whatsapp message copy:", msgErr);
+    }
 
     cart = [];
     saveCart();
