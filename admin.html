@@ -2284,13 +2284,12 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
         return;
       }
 
-      const pass = prompt("تحذير: هذا الإجراء سيحذف كافة الطلبات المسجلة ويصفر الأرباح للصفر!\nأدخل كلمة مرور المشرف للتأكيد:");
-      if (!pass || pass.trim() !== correctAdminPass) {
-        if (pass !== null) alert("كلمة المرور غير صحيحة! تم إلغاء العملية.");
+      const confirmText = prompt(`لتأكيد حذف جميع الطلبات (${allOrders.length} طلبية) نهائياً، اكتب كلمة "حذف" بالظبط:`);
+      if (confirmText === null) return;
+      if (confirmText.trim() !== "حذف") {
+        alert("لم تكتب الكلمة الصحيحة! تم إلغاء العملية.");
         return;
       }
-
-      if (!confirm(`هل أنت متأكد تماماً من حذف جميع الطلبات (${allOrders.length} طلبية) وتصفير السجل؟`)) return;
 
       try {
         const deletePromises = allOrders.map(o => deleteDoc(doc(db, "orders", o.id)));
@@ -2300,44 +2299,8 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
         toast("حدث خطأ أثناء تصفير السجل!");
       }
     });
-    /* =========================================================
-       نظام حماية وقفل لوحة التحكم (Admin Auth Guard)
-       ========================================================= */
-    let correctAdminPass = "01016118242"; // كلمة السر الافتراضية لسراقة
 
-    // فحص الجلسة
-    function checkAuthSession() {
-      const isLogged = sessionStorage.getItem("suraqa_admin_authenticated");
-      const lockEl = document.getElementById("adminAuthLockScreen");
-      if (isLogged === "true") {
-        if (lockEl) lockEl.style.display = "none";
-      } else {
-        if (lockEl) lockEl.style.display = "flex";
-      }
-    }
 
-    // التحقق من كلمة السر
-    window.submitAdminLogin = function() {
-      const input = document.getElementById("adminLoginInput");
-      const val = input ? input.value.trim() : "";
-
-      if (val === correctAdminPass) {
-        sessionStorage.setItem("suraqa_admin_authenticated", "true");
-        const lockEl = document.getElementById("adminAuthLockScreen");
-        if (lockEl) lockEl.style.display = "none";
-        toast("أهلاً بك في لوحة تحكم عطور سراقة! 💎");
-      } else {
-        alert("كلمة المرور غير صحيحة! تم حظر الوصول.");
-        if (input) input.value = "";
-      }
-    };
-
-    // تسجيل الخروج وسحب الصلاحية عند الضغط على خروج للمتجر
-    document.querySelector(".btn-exit")?.addEventListener("click", () => {
-      sessionStorage.removeItem("suraqa_admin_authenticated");
-    });
-
-    checkAuthSession();
     /* =========================================================
        إدارة إعدادات الأمان والشريط الإعلاني
        ========================================================= */
@@ -2345,12 +2308,7 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
       if (!snap.exists()) return;
       const data = snap.data();
 
-      // تحديث كلمة السر للمشرف تلقائياً
-      if (data.adminPassword) correctAdminPass = String(data.adminPassword).trim();
-
-      const passInp = document.getElementById("cfgAdminPassword");
       const waInp = document.getElementById("cfgAdminWhatsapp");
-      if (passInp && data.adminPassword) passInp.value = data.adminPassword;
       if (waInp && data.whatsappNumber) waInp.value = data.whatsappNumber;
 
       const t1 = document.getElementById("cfgTicker1");
@@ -2361,26 +2319,7 @@ document.getElementById("revFileInput")?.addEventListener("change", async (e) =>
       if (t3 && data.ticker3) t3.value = data.ticker3;
     });
 
-    // حفظ الأمان ورقم الواتساب
-    document.getElementById("storeSecurityForm")?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById("saveSecurityBtn");
-      btn.disabled = true;
-      btn.textContent = "جاري الحفظ...";
 
-      try {
-        await setDoc(settingsDoc, {
-          adminPassword: document.getElementById("cfgAdminPassword").value.trim(),
-          whatsappNumber: document.getElementById("cfgAdminWhatsapp").value.trim()
-        }, { merge: true });
-        toast("تم تحديث كلمة المرور ورقم الواتساب بنجاح! 🔒");
-      } catch (err) {
-        toast("حدث خطأ أثناء حفظ الأمان!");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "💾 حفظ وتحديث الأمان والواتساب";
-      }
-    });
 
     // حفظ نصوص الشريط الإعلاني
     document.getElementById("storeTickerForm")?.addEventListener("submit", async (e) => {
