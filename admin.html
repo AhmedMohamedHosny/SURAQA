@@ -1017,7 +1017,17 @@ input, select, textarea {
       <button type="button" class="btn-submit" id="saveThemeAndStatusBtn" style="width:100%; margin-top:10px;">حفظ وتطبيق المظهر والحالة الآن 🚀</button>
     </div>
   </div>
-
+  <!-- نافذة عرض فاتورة الطلب كاملة (نفس رسالة الواتساب) -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="theme-modal-box" style="max-width:520px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:18px;">
+        <h3 style="color:var(--gold); font-size:16px;">🧾 فاتورة الطلب الكاملة</h3>
+        <button type="button" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;" onclick="document.getElementById('invoiceModal').classList.remove('open')">&times;</button>
+      </div>
+      <pre id="invoiceMessageText" style="white-space:pre-wrap; word-wrap:break-word; font-family:inherit; font-size:12.5px; color:#fff; background:rgba(0,0,0,0.3); padding:14px; border-radius:8px; max-height:60vh; overflow-y:auto; line-height:1.7; direction:rtl; text-align:right;"></pre>
+      <button type="button" class="btn-submit" id="copyInvoiceBtn" style="width:100%; margin-top:14px;">📋 نسخ نص الفاتورة</button>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
   <!-- فايربيز والمنطق البرمجي -->
@@ -1077,7 +1087,12 @@ input, select, textarea {
     let allOrders = [];
     let allPerfumes = [];
     let currentBase64Image = "";
-
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      const div = document.createElement("div");
+      div.textContent = String(str);
+      return div.innerHTML;
+    }
     function toast(msg) {
       const t = document.getElementById("toast");
       if (!t) return;
@@ -1440,23 +1455,24 @@ const base = Number(p.price || 0);
       }
 
       tbody.innerHTML = allOrders.map(o => {
-        const itemsText = (o.items || []).map(i => `${i.name} × ${i.quantity}`).join("<br>");
+        const itemsText = (o.items || []).map(i => `${escapeHtml(i.name)} × ${escapeHtml(i.quantity)}`).join("<br>");        
         const phone = o.customer?.phone || "";
         const waLink = `https://wa.me/20${phone.startsWith("0") ? phone.slice(1) : phone}?text=${encodeURIComponent(`أهلاً بك، بخصوص طلبك من عطور سراقة بقيمة ${o.pricing?.total} ج`)}`;
 
         return `
           <tr>
             <td>
-              <strong>${o.customer?.name || "بدون اسم"}</strong>
-              <div>
+              <strong>${escapeHtml(o.customer?.name || "بدون اسم")}</strong>
+              <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
                 <button type="button" class="btn-action-copy" onclick="copyShippingLabel('${o.id}')">📋 نسخ بوليصة الشحن</button>
+                <button type="button" class="btn-action-copy" onclick="viewOrderInvoice('${o.id}')">🧾 عرض الفاتورة كاملة</button>
               </div>
             </td>
             <td>
               <a href="tel:${phone}" style="color:var(--gold); text-decoration:none; display:block; margin-bottom:4px;">${phone}</a>
               <a href="${waLink}" target="_blank" class="btn-action-wa">💬 واتساب</a>
             </td>
-            <td>${o.customer?.governorate || ""}<br><span style="font-size:10px; color:var(--text-muted);">${o.customer?.address || ""}</span></td>
+            <td>${escapeHtml(o.customer?.governorate || "")}<br><span style="font-size:10px; color:var(--text-muted);">${escapeHtml(o.customer?.address || "")}</span></td>            
             <td style="font-size:11px;">${itemsText}</td>
             <td>${o.paymentMethod === "cod" ? "عند الاستلام" : "إلكتروني"}</td>
             <td><strong style="color:var(--gold);">${(o.pricing?.total || 0).toLocaleString("ar-EG")} ج</strong></td>
@@ -1471,7 +1487,20 @@ const base = Number(p.price || 0);
         `;
       }).join("");
     }
+    window.viewOrderInvoice = function(id) {
+      const o = allOrders.find(x => x.id === id);
+      if (!o) return;
+      const msgBox = document.getElementById("invoiceMessageText");
+      if (msgBox) {
+        msgBox.textContent = o.whatsappMessage || "لا تتوفر نسخة كاملة من الفاتورة لهذا الطلب (تم إنشاؤه قبل تفعيل هذه الميزة).";
+      }
+      document.getElementById("invoiceModal")?.classList.add("open");
+    };
 
+    document.getElementById("copyInvoiceBtn")?.addEventListener("click", () => {
+      const text = document.getElementById("invoiceMessageText")?.textContent || "";
+      navigator.clipboard.writeText(text).then(() => toast("تم نسخ نص الفاتورة بنجاح! 📋"));
+    });
     window.copyShippingLabel = function(id) {
       const o = allOrders.find(x => x.id === id);
       if (!o) return;
