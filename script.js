@@ -2065,6 +2065,9 @@ document.getElementById("copyDepositVodafoneBtn")?.addEventListener("click", () 
    مراقبة وعرض آراء العملاء وسكرينات الواتساب تلقائياً
    ========================================================= */
 const reviewsCol = collection(db, "reviews");
+const csInfoDocRef = doc(db, "settings", "customerServiceInfo");
+const faqsCol = collection(db, "faqs");
+let allFaqs = [];
 let allCustomerReviews = [];
 
 onSnapshot(reviewsCol, (snapshot) => {
@@ -2266,3 +2269,70 @@ document.addEventListener("mousemove", (e) => {
     }, 600);
   }, 3500); // 3.5 ثانية (3 ثوانٍ ثبات كامل + نصف ثانية انزلاق ناعم)
 })();
+/* =========================================================
+   صفحة خدمة العملاء
+   ========================================================= */
+onSnapshot(csInfoDocRef, (snap) => {
+  if (!snap.exists()) return;
+  const d = snap.data();
+  const shipEl = document.getElementById("csShippingText");
+  const retEl = document.getElementById("csReturnsText");
+  const conEl = document.getElementById("csContactText");
+  if (shipEl && d.shippingText) shipEl.textContent = d.shippingText;
+  if (retEl && d.returnsText) retEl.textContent = d.returnsText;
+  if (conEl && d.contactText) conEl.textContent = d.contactText;
+});
+
+onSnapshot(faqsCol, (snapshot) => {
+  allFaqs = [];
+  snapshot.forEach(docSnap => allFaqs.push({ id: docSnap.id, ...docSnap.data() }));
+  renderCsFaqList();
+});
+
+function renderCsFaqList() {
+  const list = document.getElementById("csFaqList");
+  if (!list) return;
+  if (allFaqs.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted); font-size:13px;">سيتم إضافة الأسئلة الشائعة قريباً.</p>`;
+    return;
+  }
+  list.innerHTML = allFaqs.map(f => `
+    <div class="cs-faq-item">
+      <div class="cs-faq-question" onclick="this.parentElement.classList.toggle('open')">
+        <span>${escapeHtml(f.question)}</span>
+        <span>+</span>
+      </div>
+      <div class="cs-faq-answer">${escapeHtml(f.answer)}</div>
+    </div>
+  `).join("");
+}
+
+function openCsPage(tab) {
+  document.getElementById("customerServicePage").style.setProperty("display", "block", "important");
+  document.body.classList.add("no-scroll");
+  switchCsTab(tab || "shipping");
+}
+
+function closeCsPage() {
+  document.getElementById("customerServicePage").style.display = "none";
+  document.body.classList.remove("no-scroll");
+}
+
+function switchCsTab(tab) {
+  document.querySelectorAll(".cs-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.cstab === tab));
+  document.querySelectorAll(".cs-tab-panel").forEach(p => p.classList.toggle("active", p.dataset.cspanel === tab));
+}
+
+document.querySelectorAll(".cs-page-link").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    openCsPage(link.dataset.cstab);
+  });
+});
+
+document.getElementById("csTabsRow")?.addEventListener("click", (e) => {
+  const btn = e.target.closest(".cs-tab-btn");
+  if (btn) switchCsTab(btn.dataset.cstab);
+});
+
+document.getElementById("closeCsPageBtn")?.addEventListener("click", closeCsPage);
