@@ -541,6 +541,7 @@ function productCard(product) {
             <h3 class="product-name">${escapeHtml(productName(product))}</h3>
             <span class="category-mini-badge">${escapeHtml(productCategoryLabel(product))}</span>
           </div>
+        </div>
           <span class="rating">${stars(product.rating)}</span>
         </div>
 
@@ -552,10 +553,8 @@ function productCard(product) {
 <!-- السطر السفلي: يبدأ من سعر زجاجة الـ 30 مل -->
         <div class="product-bottom">
           <span class="product-price">
-            <small style="font-size: 10px; font-weight: 500; opacity: 0.8; margin-left: 3px;"></small>
             ${formatPrice(getProductDisplayPrice(product))}
           </span>
-          <span class="product-reviews-count">${product.reviews} ${escapeHtml(t("reviews"))}</span>
         </div>
       </div>
     </article>
@@ -593,9 +592,7 @@ switch (currentSort) {
     case "price-high":
       filtered.sort((a, b) => getProductDisplayPrice(b) - getProductDisplayPrice(a));
       break;
-    case "rating":
-      filtered.sort((a, b) => b.rating - a.rating);
-      break;
+
     case "name":
       filtered.sort((a, b) => productName(a).localeCompare(productName(b)));
       break;
