@@ -19,6 +19,78 @@ const db = getFirestore(app);
 const perfumesCol = collection(db, "perfumes"); 
 const ordersCol = collection(db, "orders");
 const offersCol = collection(db, "offers");
+/* =========================================================
+   SURAQA — Vanilla JavaScript E-Commerce (AR/EN)
+   ========================================================= */
+
+const products = [
+ 
+];
+
+/* =========================================================
+   TRANSLATIONS (dynamic strings)
+   ========================================================= */
+
+const i18n = {
+  ar: {
+    reviews: "تقييم",
+    quickView: "عرض سريع",
+    addToCart: "أضف إلى السلة",
+    unavailable: "غير متاح",
+    unavailableText: "هذا المنتج غير متاح حاليًا.",
+    addedTitle: "تمت الإضافة إلى السلة",
+    addedText: (name) => `تمت إضافة ${name} إلى مختاراتك.`,
+    removedTitle: "تم الحذف",
+    removedText: "تمت إزالة المنتج من سلتك.",
+    wishlistAddedTitle: "أُضيف إلى المفضلة",
+    wishlistAddedText: "يمكنك العثور على هذا العطر هنا في أي وقت.",
+    wishlistRemovedTitle: "تحديث المفضلة",
+    wishlistRemovedText: "تمت الإزالة من المفضلة.",
+    emptyCartTitle: "سلتك فارغة",
+    emptyCartText: "اكتشف عطرًا يصنع لحظتك القادمة التي لا تُنسى.",
+    exploreFragrances: "تسوّق العطور",
+    emptyCartToastTitle: "سلتك فارغة",
+    emptyCartToastText: "أضف عطرًا قبل إتمام الشراء.",
+    checkoutReadyTitle: "الدفع جاهز",
+    checkoutReadyText: "هذا العرض التجريبي جاهز للربط بنظام الدفع الخاص بك.",
+    subscribedTitle: "تم التسجيل",
+    subscribedText: "شكرًا لانضمامك إلى عالم سراقة.",
+    enterEmail: "من فضلك أدخل بريدك الإلكتروني.",
+    invalidEmail: "من فضلك أدخل بريدًا إلكترونيًا صحيحًا.",
+    welcomeMessage: "مرحبًا بك في عالم سراقة.",
+    addToWishlist: "أضف إلى المفضلة",
+    removeFromWishlist: "أزل من المفضلة"
+  },
+  en: {
+    reviews: "reviews",
+    quickView: "Quick View",
+    addToCart: "Add to Cart",
+    unavailable: "Unavailable",
+    unavailableText: "This product is currently unavailable.",
+    addedTitle: "Added to cart",
+    addedText: (name) => `${name} is now in your selection.`,
+    removedTitle: "Removed",
+    removedText: "The item was removed from your cart.",
+    wishlistAddedTitle: "Saved to favorites",
+    wishlistAddedText: "You can find this fragrance here anytime.",
+    wishlistRemovedTitle: "Wishlist updated",
+    wishlistRemovedText: "Removed from your favorites.",
+    emptyCartTitle: "Your cart is empty",
+    emptyCartText: "Discover a fragrance made for your next unforgettable moment.",
+    exploreFragrances: "Explore Fragrances",
+    emptyCartToastTitle: "Your cart is empty",
+    emptyCartToastText: "Add a fragrance before checkout.",
+    checkoutReadyTitle: "Checkout ready",
+    checkoutReadyText: "This demo is ready to connect to your payment system.",
+    subscribedTitle: "You're on the list",
+    subscribedText: "Thank you for joining the SURAQA world.",
+    enterEmail: "Please enter your email address.",
+    invalidEmail: "Please enter a valid email address.",
+    welcomeMessage: "Welcome to the SURAQA world.",
+    addToWishlist: "Add to wishlist",
+    removeFromWishlist: "Remove from wishlist"
+  }
+};
 
 /* =========================================================
    STATE
