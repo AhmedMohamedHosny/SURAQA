@@ -5868,3 +5868,31 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     zoom: 0.85;
   }
 }
+@media (max-width: 800px) {
+  .navbar,
+  .trust-item,
+  .shop-custom-frame,
+  .hero-actions-dock,
+  .pfp-top-nav,
+  .card-eye-btn,
+  .closed-glass-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .trust-item {
+    animation: none !important;
+  }
+  .footer::after,
+  .footer-bottom-glow {
+    animation: none !important;
+    filter: none !important;
+  }
+  .particles-field {
+    display: none !important;
+  }
+  .product-card::before,
+  .product-card .glass-sheen,
+  .product-card .gold-dust {
+    animation: none !important;
+  }
+}
