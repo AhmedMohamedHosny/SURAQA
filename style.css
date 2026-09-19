@@ -1527,26 +1527,25 @@ html[lang="ar"] #newsletterMessage {
   z-index: 5;
 }
 
-/* ضبط الموبايل */
 @media (max-width: 800px) {
-  .footer {
-    padding: 70px 5% 30px !important;
-    border-top-left-radius: 50% 28px !important;
-    border-top-right-radius: 50% 28px !important;
-    margin-top: 40px;
+  /* إلغاء هالة النور العلوية تماماً على الموبايل */
+  .footer::after {
+    display: none !important;
   }
 
-  .footer::after {
-    top: -50px;
-    width: 90%;
-    height: 130px;
+  /* تثبيت السهم/الكيرف بخط ذهبي ساطع وثابت دون تشتيت */
+  .footer::before {
+    opacity: 1 !important;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(226, 192, 125, 1) 0%,
+      rgba(226, 192, 125, 0.75) 50%,
+      transparent 100%
+    ) !important;
   }
 
   .footer-bottom-glow {
-    bottom: -40px;
-    width: 95%;
-    height: 120px;
-    filter: blur(22px);
+    display: none !important;
   }
 }
 
