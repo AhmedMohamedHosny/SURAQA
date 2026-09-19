@@ -5865,3 +5865,8 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     font-size: 11px !important;
   }
 }
+@media (max-width: 600px) {
+  body {
+    zoom: 0.92;
+  }
+}
