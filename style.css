@@ -683,8 +683,6 @@ html[lang="ar"] .sort-wrapper label {
   border-radius: 16px;
   padding: 2px;
   background: rgba(18, 56, 46, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
   z-index: 1;
   display: flex;
@@ -1060,19 +1058,19 @@ html[dir="rtl"] .collection-card {
 }
 
 .collection-men .collection-image {
-  background-image: url("https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?auto=format&fit=crop&w=900&q=85");
+  background-image: url("image/MEN.png");
 }
 
 .collection-women .collection-image {
-  background-image: url("https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=900&q=85");
+  background-image: url("image/WOMEN.png");
 }
 
 .collection-unisex .collection-image {
-  background-image: url("https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=900&q=85");
+  background-image: url("image/TWO.png");
 }
 
 .collection-best .collection-image {
-  background-image: url("https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=900&q=85");
+  background-image: url("image/BEST.png");
 }
 
 .collection-content {
@@ -5867,6 +5865,6 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
 }
 @media (max-width: 600px) {
   body {
-    zoom: 0.92;
+    zoom: 0.85;
   }
 }
