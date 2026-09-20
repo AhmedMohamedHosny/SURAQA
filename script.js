@@ -372,10 +372,10 @@ function getFilteredProducts() {
     } else if (currentCategory === "wishlist") {
       filtered = filtered.filter(product => wishlist.map(String).includes(String(product.id)));
     } else if (currentCategory === "men") {
-      // إظهار الرجالي + أي عطور قديمة كانت مسجلة للجنسين
+      // يعرض العطور الرجالية + العطور المحددة للجنسين
       filtered = filtered.filter(product => product.category === "men" || product.category === "unisex");
     } else if (currentCategory === "women") {
-      // إظهار النسائي + أي عطور قديمة كانت مسجلة للجنسين
+      // يعرض العطور النسائية + العطور المحددة للجنسين
       filtered = filtered.filter(product => product.category === "women" || product.category === "unisex");
     } else {
       filtered = filtered.filter(product => product.category === currentCategory);
