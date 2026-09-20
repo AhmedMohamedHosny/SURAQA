@@ -4530,10 +4530,67 @@ body {
   font-weight: 800;
 }
 
+/* ضبط شبكة العطور المماثلة لتكون مطابقة للواجهة بالملّي */
 .pfp-related-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 45px 18px !important; /* نفس أبعاد ومسافات شبكة المتجر الرئيسية */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* توريث نفس خواص كروت المتجر الرئيسية بدون أي تشويه */
+.pfp-related-grid .product-card {
+  min-width: 0 !important;
+  background: rgba(18, 56, 46, 0.45) !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55),
+              inset 0 0 0 1px rgba(212, 175, 55, 0.22) !important;
+}
+
+.pfp-related-grid .product-image-wrap {
+  height: 380px !important; /* نفس ارتفاع صورة كارت الواجهة */
+}
+
+.pfp-related-grid .product-name {
+  font-family: var(--serif-ar, 'Cairo', serif) !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+.pfp-related-grid .product-description {
+  color: var(--muted, #b0c9c0) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  min-height: auto !important;
+  opacity: 0.9 !important;
+}
+
+.pfp-related-grid .product-price {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: var(--gold, #e2c07d) !important;
+}
+
+@media (max-width: 820px) {
+  .pfp-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 30px 10px !important;
+  }
+  .pfp-related-grid .product-image-wrap {
+    height: 245px !important;
+  }
+}
+
+@media (max-width: 650px) {
+  .pfp-related-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+  }
+  .pfp-related-grid .product-image-wrap {
+    height: 280px !important;
+  }
 }
 
 /* فوتر الصفحة الكاملة */
