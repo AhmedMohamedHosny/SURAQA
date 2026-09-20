@@ -367,9 +367,16 @@ function getFilteredProducts() {
 
   if (currentCategory !== "all") {
     if (currentCategory === "bestseller") {
-      filtered = filtered.filter(product => product.bestseller);
+      // يظهر هنا كل عطر حدده المشرف كـ الأكثر مبيعاً
+      filtered = filtered.filter(product => product.bestseller === true);
     } else if (currentCategory === "wishlist") {
       filtered = filtered.filter(product => wishlist.map(String).includes(String(product.id)));
+    } else if (currentCategory === "men") {
+      // إظهار الرجالي + أي عطور قديمة كانت مسجلة للجنسين
+      filtered = filtered.filter(product => product.category === "men" || product.category === "unisex");
+    } else if (currentCategory === "women") {
+      // إظهار النسائي + أي عطور قديمة كانت مسجلة للجنسين
+      filtered = filtered.filter(product => product.category === "women" || product.category === "unisex");
     } else {
       filtered = filtered.filter(product => product.category === currentCategory);
     }
@@ -1452,8 +1459,8 @@ onSnapshot(perfumesCol, (snapshot) => {
       badge: "جديد",
       badgeAr: "جديد",
       image: data.image || "image/S1.png",
-      featured: true,
-      bestseller: false
+featured: true,
+bestseller: data.bestseller === true // قراءة القيمة الحقيقية المحددة من لوحة المشرف
     });
   });
 
