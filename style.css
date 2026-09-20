@@ -1021,8 +1021,14 @@ html[lang="ar"] .product-description {
 
 .collections-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .collections-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .collection-card {
