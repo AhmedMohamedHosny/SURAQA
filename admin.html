@@ -1485,19 +1485,6 @@ const base = Number(p.price || 0);
       renderOrdersTable();
       renderAnalytics();
     });
-// ملء الأسعار تلقائياً للأحجام المتاحة فقط (30، 50، 100 مل)
-    document.getElementById("pPrice")?.addEventListener("input", (e) => {
-      const base = Number(e.target.value);
-      if (base > 0) {
-        const s30 = document.getElementById("pSize30");
-        const s50 = document.getElementById("pSize50");
-        const s100 = document.getElementById("pSize100");
-
-        if (s50) s50.value = base;
-        if (s30) s30.value = Math.round((base * 0.65) / 10) * 10;
-        if (s100) s100.value = Math.round((base * 1.7) / 10) * 10;
-      }
-    });
 function renderOrdersTable() {
       const tbody = document.getElementById("ordersTableBody");
       if (!tbody) return;
@@ -1554,18 +1541,17 @@ function renderOrdersTable() {
         `;
       }).join("");
     }
-window.viewOrderInvoice = function(id) {
+
+    window.viewOrderInvoice = function(id) {
       const o = allOrders.find(x => x.id === id);
       if (!o) return;
 
       const msgBox = document.getElementById("invoiceMessageText");
       if (!msgBox) return;
 
-      // 1. إذا كان نص الفاتورة مخزناً مسبقاً
       if (o.whatsappMessage) {
         msgBox.textContent = o.whatsappMessage;
       } else {
-        // 2. توليد نص فاتورة الواتساب تلقائياً وبأعلى دقة من بيانات الطلب
         let itemsListText = "";
         if (Array.isArray(o.items) && o.items.length > 0) {
           itemsListText = o.items.map(i => `• ${i.name || "عطر"} (${i.size || "50مل"}) × ${i.quantity || 1} — بسعر ${(Number(i.price || 0) * Number(i.quantity || 1))} ج`).join("\n");
@@ -1580,12 +1566,11 @@ window.viewOrderInvoice = function(id) {
         const altPhone = o.customer?.secondaryPhone || o.secondaryPhone || "لا يوجد";
         const gov = o.customer?.governorate || o.gov || "—";
         const address = o.customer?.address || o.address || "—";
-const payMethod = o.paymentMethod === "cod" ? "الدفع عند الاستلام كاش 💵" : "تحويل محفظة إلكترونية 📱";
+        const payMethod = o.paymentMethod === "cod" ? "الدفع عند الاستلام كاش 💵" : "تحويل محفظة إلكترونية 📱";
         const subtotal = Number(o.pricing?.subtotal || o.subtotal || 0);
         const shipping = Number(o.pricing?.shippingFee || o.shippingFee || 0);
         const total = Number(o.pricing?.total || o.total || 0);
 
-        // حساب عدد التسترات المجانية
         const totalBottles = (o.items || []).reduce((sum, it) => sum + Number(it.quantity || 1), 0);
         const giftLine = totalBottles > 0 
           ? `🎁 *الهدايا والعينات:* عدد (${totalBottles}) تستر 5 مل مجانًا (تستر مجاني مع كل زجاجة)` 
@@ -1623,7 +1608,8 @@ ${giftLine}
       const text = document.getElementById("invoiceMessageText")?.textContent || "";
       navigator.clipboard.writeText(text).then(() => toast("تم نسخ نص الفاتورة بنجاح! 📋"));
     });
-window.copyShippingLabel = function(id) {
+
+    window.copyShippingLabel = function(id) {
       const o = allOrders.find(x => x.id === id);
       if (!o) return;
       const itemsList = (o.items || []).map(i => `${i.name} (عدد ${i.quantity})`).join(" + ");
