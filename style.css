@@ -1549,14 +1549,7 @@ html[lang="ar"] #newsletterMessage {
   }
 }
 
-.footer-main {
-  max-width: 1400px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.2fr;
-  gap: 50px;
-  padding-bottom: 65px;
-}
+
 
 .footer-logo {
   font-size: 42px;
@@ -4291,19 +4284,21 @@ body {
   letter-spacing: 2px;
 }
 
-/* محتوى تفاصيل العطر */
+/* محتوى تفاصيل العطر يملأ الشاشة بالكامل */
 .pfp-container {
-  max-width: 1200px;
+  width: 100% !important;
+  max-width: 100% !important;
   margin: 0 auto;
-  padding: 40px 20px 0;
+  padding: 40px 4% 0 !important;
 }
 
 .pfp-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
   align-items: start;
-  margin-bottom: 60px;
+  width: 100%;
+  margin-bottom: 70px;
 }
 
 .pfp-image-wrap {
@@ -4530,12 +4525,13 @@ body {
   font-weight: 800;
 }
 
-/* ضبط شبكة العطور المماثلة لتكون مطابقة للواجهة بالملّي */
+/* شبكة العطور المماثلة تمتد بعرض الشاشة بالكامل */
 .pfp-related-grid {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  gap: 45px 18px !important; /* نفس أبعاد ومسافات شبكة المتجر الرئيسية */
-  max-width: 1400px;
+  gap: 35px 20px !important;
+  width: 100% !important;
+  max-width: 100% !important;
   margin: 0 auto;
 }
 
@@ -6350,9 +6346,19 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   color: var(--muted);
   text-transform: none;
 }
-/* ضبط سطر الحقوق السفلي ليكون مطابقاً للشكل 2 */
+.footer-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 50px;
+  padding-bottom: 65px;
+}
+
 .footer-bottom {
-  max-width: 1400px;
+  width: 100% !important;
+  max-width: 100% !important;
   margin: auto;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding-top: 22px;
