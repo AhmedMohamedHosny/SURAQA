@@ -807,17 +807,19 @@ document.getElementById("pfpBuyNowBtn")?.addEventListener("click", () => {
 });
 
 function renderRelatedPerfumes(mainProduct) {
-  if (!pfpRelatedGrid) return;
+  const grid = document.getElementById("pfpRelatedGrid");
+  if (!grid) return;
 
-  const related = products
-    .filter(p => p.category === mainProduct.category && String(p.id) !== String(mainProduct.id))
-    .slice(0, 4);
+  // اختيار عطور مماثلة من نفس الفئة، أو أقرب عطور إذا لم يتوفر
+  let related = products.filter(p => p.category === mainProduct.category && String(p.id) !== String(mainProduct.id));
+  if (related.length === 0) {
+    related = products.filter(p => String(p.id) !== String(mainProduct.id));
+  }
 
-  const fallback = related.length > 0 
-    ? related 
-    : products.filter(p => String(p.id) !== String(mainProduct.id)).slice(0, 4);
-
-  pfpRelatedGrid.innerHTML = fallback.map(productCard).join("");
+  const selectedRelated = related.slice(0, 4);
+  
+  // توليد الكروت بنفس دالة الواجهة productCard
+  grid.innerHTML = selectedRelated.map(productCard).join("");
 }
 
 /* =========================================================
