@@ -1580,10 +1580,16 @@ window.viewOrderInvoice = function(id) {
         const altPhone = o.customer?.secondaryPhone || o.secondaryPhone || "لا يوجد";
         const gov = o.customer?.governorate || o.gov || "—";
         const address = o.customer?.address || o.address || "—";
-        const payMethod = o.paymentMethod === "cod" ? "الدفع عند الاستلام كاش 💵" : "تحويل محفظة إلكترونية 📱";
+const payMethod = o.paymentMethod === "cod" ? "الدفع عند الاستلام كاش 💵" : "تحويل محفظة إلكترونية 📱";
         const subtotal = Number(o.pricing?.subtotal || o.subtotal || 0);
         const shipping = Number(o.pricing?.shippingFee || o.shippingFee || 0);
         const total = Number(o.pricing?.total || o.total || 0);
+
+        // حساب عدد التسترات المجانية
+        const totalBottles = (o.items || []).reduce((sum, it) => sum + Number(it.quantity || 1), 0);
+        const giftLine = totalBottles > 0 
+          ? `🎁 *الهدايا والعينات:* عدد (${totalBottles}) تستر 5 مل مجانًا (تستر مجاني مع كل زجاجة)` 
+          : "";
 
         const generatedInvoice = `🧾 *فاتورة طلب شراء جديدة — عطور سراقة* 💎
 ━━━━━━━━━━━━━━━━━━
@@ -1597,6 +1603,7 @@ window.viewOrderInvoice = function(id) {
 📦 *المنتجات المطلوبة:*
 ${itemsListText}
 
+${giftLine}
 ━━━━━━━━━━━━━━━━━━
 💰 *الحساب والتكاليف:*
 • المجموع الفرعي: ${subtotal} جنيه
@@ -1616,10 +1623,13 @@ ${itemsListText}
       const text = document.getElementById("invoiceMessageText")?.textContent || "";
       navigator.clipboard.writeText(text).then(() => toast("تم نسخ نص الفاتورة بنجاح! 📋"));
     });
-    window.copyShippingLabel = function(id) {
+window.copyShippingLabel = function(id) {
       const o = allOrders.find(x => x.id === id);
       if (!o) return;
       const itemsList = (o.items || []).map(i => `${i.name} (عدد ${i.quantity})`).join(" + ");
+      const totalBottles = (o.items || []).reduce((sum, it) => sum + Number(it.quantity || 1), 0);
+      const giftNote = totalBottles > 0 ? ` + (مرفق ${totalBottles} تستر 5 مل هدية مجاناً 🎁)` : "";
+
       const text = `💎 بوليصة شحن عطور سراقة — SURAQA
 العميل: ${o.customer?.name}
 المحافظة: ${o.customer?.governorate}
@@ -1627,7 +1637,7 @@ ${itemsListText}
 الهاتف: ${o.customer?.phone}
 الهاتف البديل: ${o.customer?.secondaryPhone || "لا يوجد"}
 المبلغ المطلوب: ${o.pricing?.total} جنيه
-المنتجات: ${itemsList}`;
+المنتجات: ${itemsList}${giftNote}`;
 
       navigator.clipboard.writeText(text).then(() => {
         toast("تم نسخ بوليصة الشحن بنجاح! 📋");
