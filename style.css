@@ -6350,3 +6350,23 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   color: var(--muted);
   text-transform: none;
 }
+/* ضبط سطر الحقوق السفلي ليكون مطابقاً للشكل 2 */
+.footer-bottom {
+  max-width: 1400px;
+  margin: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 22px;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+}
+
+.dev-credit {
+  font-family: var(--sans, 'DM Sans', sans-serif) !important;
+  font-size: 11.5px !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  letter-spacing: 0.6px !important;
+  direction: ltr !important;
+}
