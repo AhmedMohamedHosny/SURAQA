@@ -6139,3 +6139,49 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     line-height: 1.75;
   }
 }
+/* صندوق هدية التستر المجاني 5 مل في صفحة العطر */
+.free-tester-badge-box {
+  background: linear-gradient(135deg, rgba(22, 79, 63, 0.75), rgba(7, 25, 20, 0.95));
+  border: 1.5px dashed var(--gold, #e2c07d);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 14px 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(226, 192, 125, 0.08);
+  animation: testerPulse 4s infinite alternate ease-in-out;
+}
+
+@keyframes testerPulse {
+  0% { border-color: rgba(226, 192, 125, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+  100% { border-color: rgba(226, 192, 125, 0.9); box-shadow: 0 8px 25px rgba(226, 192, 125, 0.25); }
+}
+
+.tester-gift-icon {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(226, 192, 125, 0.6));
+}
+
+.tester-gift-info strong {
+  font-size: 13px;
+  color: var(--gold, #e2c07d);
+  display: block;
+  margin-bottom: 3px;
+  font-weight: 800;
+}
+
+.tester-gift-info p {
+  font-size: 12px;
+  color: #f5f4ef;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.tester-gift-info p strong {
+  display: inline;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
