@@ -533,14 +533,19 @@ input, select, textarea {
               <label>اسم العطر *</label>
               <input type="text" id="pName" placeholder="مثال: سراقة رويال" required>
             </div>
-            <div class="form-group">
-              <label>التصنيف *</label>
-              <select id="pCategory">
-                <option value="men">رجالي</option>
-                <option value="women">نسائي</option>
-                <option value="unisex">للجنسين</option>
-              </select>
-            </div>
+<div class="form-group">
+  <label>التصنيف *</label>
+  <select id="pCategory">
+    <option value="men">رجالي</option>
+    <option value="women">نسائي</option>
+  </select>
+</div>
+<div class="form-group" style="justify-content: flex-end; padding-bottom: 6px;">
+  <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gold); font-size: 12px; font-weight: 800;">
+    <input type="checkbox" id="pBestseller" style="width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer;">
+    <span>⭐ تمييز كـ "الأكثر مبيعاً"</span>
+  </label>
+</div>
             <div class="form-group">
               <label>السعر الحالي (EGP) *</label>
               <input type="number" id="pPrice" placeholder="1290" required>
@@ -1279,9 +1284,16 @@ function calcTotalStockPreview() {
                 </span>
               </div>
 <div style="display: flex; align-items: center; gap: 6px;">
-                <button type="button" class="btn-card-edit" onclick="startEditPerfume('${p.id}')" title="تعديل العطر">✏️ تعديل</button>
-                <button type="button" class="btn-card-delete" onclick="deletePerfume('${p.id}')" title="حذف العطر نهائياً من الموقع">✕</button>
-              </div>
+  <button type="button" 
+          class="btn-card-edit" 
+          onclick="toggleBestseller('${p.id}')" 
+          style="background: ${p.bestseller ? 'rgba(212,175,55,0.25)' : 'rgba(255,255,255,0.05)'}; border-color: ${p.bestseller ? 'var(--gold)' : 'var(--line)'}; color: ${p.bestseller ? 'var(--gold)' : 'var(--text-muted)'};"
+          title="تفعيل أو إلغاء الأكثر مبيعاً">
+    ${p.bestseller ? '⭐ الأكثر مبيعاً' : '☆ عادي'}
+  </button>
+  <button type="button" class="btn-card-edit" onclick="startEditPerfume('${p.id}')" title="تعديل العطر">✏️ تعديل</button>
+  <button type="button" class="btn-card-delete" onclick="deletePerfume('${p.id}')" title="حذف العطر نهائياً من الموقع">✕</button>
+</div>
             </div>
 
             <!-- أزرار إنقاص وزيادة كل حجم على حدة لمبيعات المحل المباشرة -->
@@ -1321,6 +1333,18 @@ function calcTotalStockPreview() {
 
       toast(delta < 0 ? `تم خصم زجاجة ${size} مل (بيع بالمحل)` : `تمت إضافة زجاجة ${size} مل للمخزون`);
     };
+    // تبديل حالة الأكثر مبيعاً بضغطة زر واحدة
+window.toggleBestseller = async function(id) {
+  const p = allPerfumes.find(x => x.id === id);
+  if (!p) return;
+  const newState = !p.bestseller;
+  try {
+    await updateDoc(doc(db, "perfumes", id), { bestseller: newState });
+    toast(newState ? `تمت إضافة "${p.name}" للأكثر مبيعاً ⭐` : `تمت إزالة "${p.name}" من الأكثر مبيعاً`);
+  } catch(e) {
+    toast("حدث خطأ أثناء التحديث!");
+  }
+};
 // حذف العطر نهائياً من فايربيز والمتجر
     window.deletePerfume = async function(id) {
       const p = allPerfumes.find(x => x.id === id);
@@ -1349,7 +1373,7 @@ function calcTotalStockPreview() {
       document.getElementById("pPrice").value = p.price || "";
       document.getElementById("pOldPrice").value = p.oldPrice || "";
       document.getElementById("pDesc").value = p.desc || "";
-
+document.getElementById("pBestseller").checked = !!p.bestseller;
 const base = Number(p.price || 0);
       document.getElementById("pSize30").value = p.sizes?.[30] ?? Math.round((base * 0.65) / 10) * 10;
       document.getElementById("pSize50").value = p.sizes?.[50] ?? base;
@@ -1419,9 +1443,11 @@ const base = Number(p.price || 0);
         const totalStock = stock30 + stock50 + stock100;
 
         const perfumeData = {
+          
           name: document.getElementById("pName").value.trim(),
           category: document.getElementById("pCategory").value,
           price: basePrice,
+          bestseller: document.getElementById("pBestseller").checked,
           oldPrice: document.getElementById("pOldPrice").value ? Number(document.getElementById("pOldPrice").value) : null,
           stock: totalStock,
           stocks: {
