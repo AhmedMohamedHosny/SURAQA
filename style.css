@@ -6185,3 +6185,111 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+/* =========================================================
+   تحويل السلة وإتمام الطلب إلى صفحات كاملة فاخرة
+   ========================================================= */
+
+/* 1. السلة كصفحة كاملة */
+.cart-full-page {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  background: var(--ivory, #103d30) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  z-index: 999999 !important;
+}
+
+.cart-page-content-wrapper {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.cart-full-page .cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 25px;
+}
+
+.cart-full-page .cart-footer {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(7, 25, 20, 0.95);
+  border-top: 1px solid var(--line);
+}
+
+/* 2. صفحة إتمام الطلب كصفحة كاملة */
+.checkout-full-page {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999999 !important;
+  background: #071914 !important;
+  color: var(--text) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  animation: pfpFadeIn 0.3s ease forwards;
+}
+
+.checkout-page-container {
+  max-width: 720px;
+  margin: 20px auto 60px auto;
+  padding: 20px;
+  background: rgba(16, 61, 48, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.checkout-header-styled {
+  text-align: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 15px;
+}
+
+.checkout-header-styled h2 {
+  font-family: var(--serif-ar, 'Cairo', serif);
+  font-size: 28px;
+  color: #fff;
+  font-weight: 800;
+}
+
+/* زر شراء فوراً */
+.pfp-buy-now-btn {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.2s, filter 0.2s;
+  box-shadow: 0 6px 20px rgba(211, 84, 0, 0.35);
+  margin-top: 8px;
+}
+
+.pfp-buy-now-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* ضبط مظهر الحقوق */
+.dev-credit {
+  font-family: var(--sans);
+  letter-spacing: 0.8px;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: none;
+}
