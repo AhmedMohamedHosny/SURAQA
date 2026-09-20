@@ -1320,9 +1320,19 @@ for (const item of cart) {
       receiptMessageText = "📸 سأقوم بإرفاق صورة إيصال التحويل (Screenshot) هنا في الشات الآن لتأكيد الشحن.";
     }
 
-const itemsSummary = orderItems
+// حساب عدد الزجاجات لإهداء تستر 5 مل مع كل زجاجة
+    const totalBottlesCount = orderItems.reduce((acc, item) => {
+      // استثناء العروض إن لم تكن زجاجة فردية أو احتسابها كزجاجات
+      return acc + Number(item.quantity || 1);
+    }, 0);
+
+    const itemsSummary = orderItems
       .map(item => `• ${item.name} × ${item.quantity} (${(item.price * item.quantity).toLocaleString("ar-EG")} ج)`)
       .join("\n");
+
+    const freeGiftsText = totalBottlesCount > 0 
+      ? `🎁 *الهدايا المجانية:* عدد (${totalBottlesCount}) تستر 5 مل مجانًا من عطور سراقة الفاخرة لتجربة روائح جديدة.` 
+      : "";
 
     const shippingNoteWa = shippingFee > 0 
       ? `🚚 *مصاريف الشحن (مطلوب تحويلها فودافون كاش):* ${shippingFee} جنيه\n💵 *المبلغ المتبقي عند الاستلام:* ${subtotal.toLocaleString("ar-EG")} جنيه`
@@ -1339,6 +1349,8 @@ const itemsSummary = orderItems
 --------------------------------
 🛍️ *تفاصيل المنتجات:*
 ${itemsSummary}
+--------------------------------
+${freeGiftsText}
 --------------------------------
 💰 *قيمة المنتجات:* ${subtotal.toLocaleString("ar-EG")} جنيه
 ${shippingNoteWa}
