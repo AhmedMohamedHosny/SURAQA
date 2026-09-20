@@ -689,8 +689,10 @@ function updatePfpPriceDisplay() {
 
   // التحقق من مخزون الحجم المختار تحديداً
   const stocks = currentPfpProduct.stocks || {};
-  const sizeStock = stocks[currentPfpSize] !== undefined ? Number(stocks[currentPfpSize]) : 20;
-
+// قراءة مخزون الحجم بدقة (لو لم يحدد المشرف حجماً معيناً يقرأ المخزون الكلي أو 0)
+  const sizeStock = (stocks[currentPfpSize] !== undefined && stocks[currentPfpSize] !== null)
+    ? Number(stocks[currentPfpSize])
+    : (currentPfpProduct.stock !== undefined ? Number(currentPfpProduct.stock) : 0);
   if (pfpAddBtn) {
     if (sizeStock <= 0) {
       pfpAddBtn.disabled = true;
@@ -1450,7 +1452,10 @@ onSnapshot(perfumesCol, (snapshot) => {
       categoryLabelAr: data.category === 'men' ? 'رجالي' : data.category === 'women' ? 'نسائي' : 'للجنسين',
       price: Number(data.price),
      sizes: data.sizes || null, // قراءة أسعار الأحجام المحددة من المشرف
-      rating: 5.0,
+    stocks: data.stocks || null, // قراءة مخزون الأحجام الفعلي المحدد من المشرف
+      stock: data.stock !== undefined ? Number(data.stock) : 0,
+     
+     rating: 5.0,
       reviews: 1,
       description: data.desc || "",
       descriptionAr: data.desc || "",
