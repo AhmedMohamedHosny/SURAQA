@@ -114,8 +114,20 @@ const SIZE_MULTIPLIERS = {
   100: 1.70  // 100 مل توفير
 };
 
+function getProductExactPrice(product, size = 50) {
+  if (!product) return 0;
+  const sz = Number(size);
+  // 1. إذا كان المشرف حدد سعراً مخصصاً لهذا الحجم في لوحة التحكم
+  if (product.sizes && product.sizes[sz] !== undefined && product.sizes[sz] !== null && Number(product.sizes[sz]) > 0) {
+    return Number(product.sizes[sz]);
+  }
+  // 2. إذا لم يحدد، نعتمد على النسبة التقريبية من السعر الأساسي
+  const base = Number(product.price || 0);
+  return Math.round((base * (SIZE_MULTIPLIERS[sz] || 1)) / 10) * 10;
+}
+
 function getPriceForSize(basePrice, size = 50) {
-  return Math.round((basePrice * (SIZE_MULTIPLIERS[size] || 1)) / 10) * 10;
+  return Math.round((basePrice * (SIZE_MULTIPLIERS[Number(size)] || 1)) / 10) * 10;
 }
 function getProductDisplayPrice(product) {
   if (product.sizes && product.sizes[30]) {
@@ -490,11 +502,12 @@ function getCartItemDetails(item) {
     };
   }
 
-  const prod = getProduct(item.id);
+const prod = getProduct(item.id);
   if (!prod) return null;
 
   const size = Number(item.size || 50);
-  const price = getPriceForSize(prod.price, size);
+  // حساب السعر الحقيقي المضبوط للحجم المختار بدقة تامة
+  const price = getProductExactPrice(prod, size);
   return {
     id: prod.id,
     name: productName(prod),
@@ -542,21 +555,36 @@ function addToCart(id, quantity = 1, size = 50) {
   const product = getProduct(id);
   if (!product) return;
 
-  const existing = cart.find(item => String(item.id) === String(product.id) && Number(item.size || 50) === Number(size));
+  const sz = Number(size);
+  const availableStock = getCurrentSizeStock(product, sz);
+
+  if (availableStock <= 0) {
+    showToast("نفدت الكمية", `عذراً، نفد مخزون عطر ${productName(product)} بحجم (${sz} مل) ❌`);
+    return;
+  }
+
+  const existing = cart.find(item => String(item.id) === String(product.id) && Number(item.size || 50) === sz);
 
   if (existing) {
-    existing.quantity += quantity;
+    if (existing.quantity + quantity > availableStock) {
+      showToast("تجاوز المخزون المتاح", `المتبقي من حجم (${sz} مل) هو ${availableStock} قطع فقط ⚠️`);
+      existing.quantity = availableStock;
+    } else {
+      existing.quantity += quantity;
+      showToast("تمت الإضافة للسلة 🛍️", `${productName(product)} (${sz} مل)`);
+    }
   } else {
+    const finalQty = Math.min(quantity, availableStock);
     cart.push({
       id: product.id,
-      quantity,
-      size: Number(size)
+      quantity: finalQty,
+      size: sz
     });
+    showToast("تمت الإضافة للسلة 🛍️", `${productName(product)} (${sz} مل)`);
   }
 
   saveCart();
   updateCartUI();
-  showToast("تمت الإضافة للسلة 🛍️", `${productName(product)} (${size} مل)`);
 }
 
 function removeFromCart(id, size) {
@@ -576,6 +604,16 @@ function changeQuantity(id, change, size) {
     return sameId && sameSize;
   });
   if (!item) return;
+
+  // فحص المخزون قبل الزيادة في السلة
+  if (change > 0 && !String(item.id).startsWith("offer_")) {
+    const product = getProduct(item.id);
+    const availableStock = getCurrentSizeStock(product, item.size);
+    if (item.quantity + change > availableStock) {
+      showToast("أقصى كمية متاحة", `لا يوجد سوى ${availableStock} قطع متوفرة من هذا الحجم بالمخزن ⚠️`);
+      return;
+    }
+  }
 
   item.quantity += change;
   if (item.quantity <= 0) {
@@ -681,29 +719,37 @@ let currentPfpSize = 50;
 let currentPfpQty = 1;
 function updatePfpPriceDisplay() {
   if (!currentPfpProduct || !pfpPrice) return;
-  const unitPrice = (currentPfpProduct.sizes && currentPfpProduct.sizes[currentPfpSize]) 
-    ? Number(currentPfpProduct.sizes[currentPfpSize]) 
-    : getPriceForSize(currentPfpProduct.price, currentPfpSize);
   
-  pfpPrice.textContent = formatPrice(unitPrice * currentPfpQty);
+  // 1. حساب سعر الوحدة الدقيق لهذا الحجم تحديداً
+  const unitPrice = getProductExactPrice(currentPfpProduct, currentPfpSize);
+  pfpPrice.textContent = formatPrice(unitPrice * Math.max(1, currentPfpQty));
 
-  // التحقق من مخزون الحجم المختار تحديداً
-  const stocks = currentPfpProduct.stocks || {};
-// قراءة مخزون الحجم بدقة (لو لم يحدد المشرف حجماً معيناً يقرأ المخزون الكلي أو 0)
-  const sizeStock = (stocks[currentPfpSize] !== undefined && stocks[currentPfpSize] !== null)
-    ? Number(stocks[currentPfpSize])
-    : (currentPfpProduct.stock !== undefined ? Number(currentPfpProduct.stock) : 0);
+  // 2. فحص مخزون الحجم المختار بدقة
+  const sizeStock = getCurrentSizeStock(currentPfpProduct, currentPfpSize);
+
+  const buyNowBtn = document.getElementById("pfpBuyNowBtn");
+
   if (pfpAddBtn) {
     if (sizeStock <= 0) {
       pfpAddBtn.disabled = true;
       pfpAddBtn.style.opacity = "0.5";
       pfpAddBtn.style.cursor = "not-allowed";
       pfpAddBtn.innerHTML = `<span>❌</span><span>نفدت كمية (${currentPfpSize} مل)</span>`;
+      if (buyNowBtn) {
+        buyNowBtn.disabled = true;
+        buyNowBtn.style.opacity = "0.5";
+        buyNowBtn.style.cursor = "not-allowed";
+      }
     } else {
       pfpAddBtn.disabled = false;
       pfpAddBtn.style.opacity = "1";
       pfpAddBtn.style.cursor = "pointer";
       pfpAddBtn.innerHTML = `<span>🛒</span><span>أضف إلى السلة (متبقي ${sizeStock} فقط)</span>`;
+      if (buyNowBtn) {
+        buyNowBtn.disabled = false;
+        buyNowBtn.style.opacity = "1";
+        buyNowBtn.style.cursor = "pointer";
+      }
     }
   }
 }
@@ -761,6 +807,17 @@ function closeProductFullPage() {
 
 closeProductPageBtn?.addEventListener("click", closeProductFullPage);
 
+// دالة للحصول على المخزون الفعلي للحجم الحالي
+function getCurrentSizeStock(prod, size) {
+  if (!prod) return 0;
+  const sz = Number(size);
+  const stocks = prod.stocks || {};
+  if (stocks[sz] !== undefined && stocks[sz] !== null) {
+    return Number(stocks[sz]);
+  }
+  return prod.stock !== undefined ? Number(prod.stock) : 10;
+}
+
 document.getElementById("pfpSizes")?.addEventListener("click", (e) => {
   const btn = e.target.closest(".pfp-size-btn");
   if (!btn || !currentPfpProduct) return;
@@ -769,6 +826,12 @@ document.getElementById("pfpSizes")?.addEventListener("click", (e) => {
   btn.classList.add("active");
 
   currentPfpSize = Number(btn.dataset.size);
+  
+  // إعادة ضبط الكمية لـ 1 والتأكد أنها لا تتخطى المخزون المتاح
+  const availableStock = getCurrentSizeStock(currentPfpProduct, currentPfpSize);
+  currentPfpQty = availableStock > 0 ? 1 : 0;
+  if (pfpQtyVal) pfpQtyVal.textContent = currentPfpQty;
+
   updatePfpPriceDisplay();
 });
 
@@ -781,11 +844,17 @@ document.getElementById("pfpQtyMinus")?.addEventListener("click", () => {
 });
 
 document.getElementById("pfpQtyPlus")?.addEventListener("click", () => {
-  if (currentPfpQty < 20) {
-    currentPfpQty++;
-    if (pfpQtyVal) pfpQtyVal.textContent = currentPfpQty;
-    updatePfpPriceDisplay();
+  if (!currentPfpProduct) return;
+  const availableStock = getCurrentSizeStock(currentPfpProduct, currentPfpSize);
+
+  if (currentPfpQty >= availableStock) {
+    showToast("المخزون المتاح", `عذراً، المتوفر من حجم (${currentPfpSize} مل) هو ${availableStock} فقط! ⚠️`);
+    return;
   }
+
+  currentPfpQty++;
+  if (pfpQtyVal) pfpQtyVal.textContent = currentPfpQty;
+  updatePfpPriceDisplay();
 });
 
 pfpAddBtn?.addEventListener("click", () => {
