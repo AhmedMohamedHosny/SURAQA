@@ -408,6 +408,12 @@ function renderProducts() {
   const filtered = getFilteredProducts();
   const totalPages = Math.ceil(filtered.length / PRODUCTS_PER_PAGE);
 
+  // إظهار أو إخفاء تنبيه نسائي بناءً على التصنيف المختار
+  const womenBanner = document.getElementById("womenNoticeBanner");
+  if (womenBanner) {
+    womenBanner.style.display = (currentCategory === "women") ? "block" : "none";
+  }
+
   if (currentPage > totalPages && totalPages > 0) {
     currentPage = 1;
   }
@@ -705,7 +711,11 @@ function openProductFullPage(id) {
   currentPfpProduct = prod;
   currentPfpSize = 50;
   currentPfpQty = 1;
-
+// إظهار تنبيه نسائي داخل صفحة المنتج إذا كان العطر نسائياً
+  const pfpNotice = document.getElementById("pfpWomenNotice");
+  if (pfpNotice) {
+    pfpNotice.style.display = (prod.category === "women") ? "block" : "none";
+  }
   if (pfpImage) { pfpImage.src = prod.image || "image/S1.png"; pfpImage.alt = productName(prod); }
   if (pfpCategory) pfpCategory.textContent = productCategoryLabel(prod);
   if (pfpName) pfpName.textContent = productName(prod);
