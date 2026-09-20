@@ -643,14 +643,12 @@ function updateCartUI() {
 
 function openCart() {
   cartDrawer?.classList.add("active", "open");
-  overlay?.classList.add("active", "open");
   document.body.classList.add("no-scroll");
   updateCartUI();
 }
 
 function closeCart() {
   cartDrawer?.classList.remove("active", "open");
-  overlay?.classList.remove("active", "open");
   document.body.classList.remove("no-scroll");
 }
 
@@ -794,6 +792,18 @@ pfpAddBtn?.addEventListener("click", () => {
     pfpAddBtn.style.background = "var(--gold)";
     if (label) label.textContent = "أضف إلى السلة";
   }, 1800);
+});
+
+// تفعيل زر شراء فوراً
+document.getElementById("pfpBuyNowBtn")?.addEventListener("click", () => {
+  if (!currentPfpProduct) return;
+
+  // 1. إضافة العطر المختار بالسعة والكمية الحالية إلى السلة
+  addToCart(currentPfpProduct.id, currentPfpQty, currentPfpSize);
+
+  // 2. إغلاق صفحة العطر وفتح صفحة إتمام الطلب فوراً
+  closeProductFullPage();
+  openCheckout();
 });
 
 function renderRelatedPerfumes(mainProduct) {
@@ -1118,13 +1128,19 @@ function openCheckout() {
   }
   closeCart();
   updateCheckoutSummary();
-  checkoutModal?.classList.add("active");
-  document.body.classList.add("no-scroll");
+  autoFillCustomerDetails(); // تعبئة البيانات تلقائياً
+  if (checkoutModal) {
+    checkoutModal.style.setProperty("display", "block", "important");
+    document.body.classList.add("no-scroll");
+    checkoutModal.scrollTop = 0;
+  }
 }
 
 function closeCheckout() {
-  checkoutModal?.classList.remove("active");
-  document.body.classList.remove("no-scroll");
+  if (checkoutModal) {
+    checkoutModal.style.display = "none";
+    document.body.classList.remove("no-scroll");
+  }
 }
 
 document.getElementById("checkoutBtn")?.addEventListener("click", openCheckout);
@@ -2159,3 +2175,44 @@ document.getElementById("csTabsRow")?.addEventListener("click", (e) => {
 });
 
 document.getElementById("closeCsPageBtn")?.addEventListener("click", closeCsPage);
+// حفظ بيانات العميل تلقائياً في المتصفح
+function saveCustomerDetailsLocally(details) {
+  try {
+    localStorage.setItem("suraqa_saved_customer", JSON.stringify(details));
+  } catch (e) {
+    console.warn("Storage error", e);
+  }
+}
+
+// استرجاع وتعبئة بيانات العميل تلقائياً فور فتح صفحة الشراء
+function autoFillCustomerDetails() {
+  try {
+    const saved = localStorage.getItem("suraqa_saved_customer");
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    if (data.name) document.getElementById("custName").value = data.name;
+    if (data.phone) document.getElementById("custPhone").value = data.phone;
+    if (data.phone2) document.getElementById("custPhone2").value = data.phone2;
+    if (data.gov) {
+      const govSelect = document.getElementById("custGov");
+      if (govSelect) {
+        govSelect.value = data.gov;
+        updateCheckoutSummary();
+      }
+    }
+    if (data.address) document.getElementById("custAddress").value = data.address;
+  } catch (e) {}
+}
+
+// مراقبة كتابة العميل في الحقول لحفظها مباشرة
+["custName", "custPhone", "custPhone2", "custGov", "custAddress"].forEach(id => {
+  document.getElementById(id)?.addEventListener("input", () => {
+    saveCustomerDetailsLocally({
+      name: document.getElementById("custName")?.value.trim(),
+      phone: document.getElementById("custPhone")?.value.trim(),
+      phone2: document.getElementById("custPhone2")?.value.trim(),
+      gov: document.getElementById("custGov")?.value,
+      address: document.getElementById("custAddress")?.value.trim()
+    });
+  });
+});
