@@ -6352,27 +6352,52 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   color: var(--muted);
   text-transform: none;
 }
+/* ضبط الفوتر ليمتد ملء الشاشة بالكامل 100% بدون أي فراغات جانبية */
+.footer {
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+  padding: 110px 5% 40px !important;
+}
+
 .footer-main {
   width: 100% !important;
-  max-width: 100% !important;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.2fr;
-  gap: 50px;
-  padding-bottom: 65px;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr !important;
+  gap: 50px !important;
+  padding-bottom: 65px !important;
 }
 
 .footer-bottom {
   width: 100% !important;
-  max-width: 100% !important;
-  margin: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding-top: 22px;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding-top: 22px !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 11px !important;
+}
+
+.dev-credit {
+  font-family: var(--sans, 'DM Sans', sans-serif) !important;
+  font-size: 11.5px !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  letter-spacing: 0.6px !important;
+  direction: ltr !important;
+}
+
+/* إذا كان الفوتر داخل صفحة العطر أو الآراء يمتد ملء العرض */
+.product-full-page .footer,
+.all-reviews-page .footer {
+  width: 100% !important;
+  margin-top: 60px !important;
 }
 
 .dev-credit {
