@@ -5703,7 +5703,7 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
    ========================================================= */
 @media (max-width: 800px) {
   .shop-custom-frame {
-    padding: 14px 12px !important;
+padding: 26px 18px !important;     
     border-radius: 14px !important;
     margin: 10px 2% 16px !important;
     text-align: center !important;
@@ -5711,7 +5711,7 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
 
   .shop-frame-inner {
     flex-direction: column !important;
-    gap: 4px !important;
+    gap: 10px !important;
     align-items: center !important;
   }
 
@@ -5719,8 +5719,10 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
     font-size: 22px !important;
   }
 
-  .shop-frame-desc {
-    font-size: 11px !important;
+.shop-frame-desc {
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+    margin-top: 6px !important;
   }
 
   .shop-toolbar-pills {
@@ -6068,6 +6070,11 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   border-radius: 6px;
   margin-right: 8px;
   vertical-align: middle;
+}
+.sub-heading-tag {
+  display: block;
+  width: fit-content;
+  margin: 8px auto 0;
 }
 
 /* =========================================================
