@@ -5735,7 +5735,19 @@ padding: 26px 18px !important;
   }
 
   .shop-frame-heading {
-    font-size: 22px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    display: block !important;
+  }
+
+  .sub-heading-tag {
+    display: inline !important;
+    margin: 0 !important;
+    font-size: 13px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    white-space: nowrap !important;
   }
 
 .shop-frame-desc {
