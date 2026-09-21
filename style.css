@@ -5629,6 +5629,7 @@ html[dir="rtl"] @keyframes marqueeReviewsScroll {
   border: 1px solid rgba(226, 192, 125, 0.4);
   padding: 7px 18px;
   border-radius: 50px;
+  white-space: nowrap;
 }
 
 /* 2. شريط الكبسولات المضيئة (Category Glow Pills) */
@@ -5738,9 +5739,11 @@ padding: 26px 18px !important;
   }
 
 .shop-frame-desc {
-    font-size: 13.5px !important;
-    line-height: 1.6 !important;
+    font-size: 9.5px !important;
+    line-height: 1.4 !important;
     margin-top: 6px !important;
+    padding: 6px 10px !important;
+    white-space: nowrap !important;
   }
 
   .shop-toolbar-pills {
