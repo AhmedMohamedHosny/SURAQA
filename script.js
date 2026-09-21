@@ -363,12 +363,6 @@ function productCard(product) {
           ${escapeHtml(productDescription(product))}
         </p>
 
-<!-- السطر السفلي: يبدأ من سعر زجاجة الـ 30 مل -->
-        <div class="product-bottom">
-          <span class="product-price">
-            ${formatPrice(getProductDisplayPrice(product))}
-          </span>
-        </div>
       </div>
     </article>
   `;
